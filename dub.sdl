@@ -1,0 +1,6 @@
+name "juliad-helloworld"
+description "Hello world embedding Julia in D"
+authors "Laeeth Isharc"
+copyright "Copyright © 2018, Laeeth Isharc"
+license "MIT"
+dependency "dpp" version="~master"

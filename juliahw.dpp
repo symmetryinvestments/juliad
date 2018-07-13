@@ -1,0 +1,22 @@
+
+import std.stdio;
+#include <julia.h>
+
+int main(string[] args)
+{
+    char* command = cast(char*)"println(sqrt(2.0))".ptr;
+    /* required: setup the Julia context */
+    jl_init_with_image(cast(char*)"/usr/bin".ptr,cast(char*)"/usr/lib/julia/sys".ptr);
+
+    /* run Julia commands */
+    jl_eval_string(command);
+
+    writeln("===");
+    /* strongly recommended: notify Julia that the
+         program is about to terminate. this allows
+         Julia time to cleanup pending write requests
+         and run all finalizers
+    */
+    jl_atexit_hook(0);
+    return 0;
+}
