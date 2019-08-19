@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/juliad
+juliad.so
+juliad.dylib
+juliad.dll
+juliad.a
+juliad.lib
+juliad-test-*
+*.exe
+*.o
+*.obj
+*.lst
