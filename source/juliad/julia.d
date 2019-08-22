@@ -219,7 +219,7 @@ extern(C)
 //    static core.simd.long2 _mm_maddubs_epi16(core.simd.long2, core.simd.long2) @nogc nothrow;
     static int _mm_hsubs_pi16(int , int ) @nogc nothrow;
 //    static core.simd.long2 _mm_hsubs_epi16(core.simd.long2, core.simd.long2) @nogc nothrow;
-    void* alloca(c_ulong) @nogc nothrow;
+    pragma(mangle, "alloca") void* alloca_(c_ulong) @nogc nothrow;
     static int _mm_hsub_pi32(int , int ) @nogc nothrow;
     uint inet_addr(const(char)*) @nogc nothrow;
     uint inet_lnaof(in_addr) @nogc nothrow;
@@ -722,7 +722,7 @@ extern(C)
     real __fmodl(real, real) @nogc nothrow;
     double __fmod(double, double) @nogc nothrow;
     double fmod(double, double) @nogc nothrow;
-    int isinf(double) @nogc nothrow;
+    pragma(mangle, "isinf") int isinf_(double) @nogc nothrow;
     int isinfl(real) @nogc nothrow;
     int isinff(float) @nogc nothrow;
     int finitel(real) @nogc nothrow;
@@ -754,7 +754,7 @@ extern(C)
     double nan(const(char)*) @nogc nothrow;
     int isnanl(real) @nogc nothrow;
     int isnanf(float) @nogc nothrow;
-    int isnan(double) @nogc nothrow;
+    pragma(mangle, "isnan") int isnan_(double) @nogc nothrow;
     double __j0(double) @nogc nothrow;
     double j0(double) @nogc nothrow;
     real j0l(real) @nogc nothrow;
@@ -2397,7 +2397,7 @@ extern(C)
     c_ulong memhash_seed(const(char)*, c_ulong, uint) @nogc nothrow;
     uint memhash32(const(char)*, c_ulong) @nogc nothrow;
     uint memhash32_seed(const(char)*, c_ulong, uint) @nogc nothrow;
-    static c_ulong bitmix(c_ulong, c_ulong) @nogc nothrow;
+    pragma(mangle, "bitmix") static c_ulong bitmix_(c_ulong, c_ulong) @nogc nothrow;
 //    static core.simd.long4 _mm256_maskz_expand_epi16(ushort, core.simd.long4) @nogc nothrow;
     struct htable_t
     {
@@ -3642,8 +3642,8 @@ extern(C)
         _jl_timing_block_t* timing_stack;
     }
 //    static core.simd.long2 _mm256_maskz_cvtusepi64_epi16(ubyte, core.simd.long4) @nogc nothrow;
-    void jl_cpu_pause() @nogc nothrow;
-    void jl_cpu_wake() @nogc nothrow;
+    pragma(mangle, "jl_cpu_pause") void jl_cpu_pause_() @nogc nothrow;
+    pragma(mangle, "jl_cpu_wake") void jl_cpu_wake_() @nogc nothrow;
 //    static core.simd.long2 _mm256_mask_cvtusepi64_epi16(core.simd.long2, ubyte, core.simd.long4) @nogc nothrow;
 //    static core.simd.long2 _mm256_cvtusepi64_epi16(core.simd.long4) @nogc nothrow;
     static byte jl_gc_state_set(_jl_tls_states_t*, byte, byte) @nogc nothrow;
@@ -6311,7 +6311,7 @@ extern(C)
     int sem_post(sem_t*) @nogc nothrow;
     int sem_getvalue(sem_t*, int*) @nogc nothrow;
     alias jmp_buf = __jmp_buf_tag[1];
-    int setjmp(__jmp_buf_tag*) @nogc nothrow;
+    pragma(mangle, "setjmp") int setjmp_(__jmp_buf_tag*) @nogc nothrow;
     int _setjmp(__jmp_buf_tag*) @nogc nothrow;
 //    static core.simd.long4 _mm256_mask_load_epi32(core.simd.long4, ubyte, const(void)*) @nogc nothrow;
     void longjmp(__jmp_buf_tag*, int) @nogc nothrow;
@@ -9835,6 +9835,8692 @@ extern(C)
 //    static core.simd.long4 _mm256_mask_mullo_epi64(core.simd.long4, ubyte, core.simd.long4, core.simd.long4) @nogc nothrow;
 //    static core.simd.long4 _mm256_maskz_mullo_epi64(ubyte, core.simd.long4, core.simd.long4) @nogc nothrow;
 //    static core.simd.long2 _mm_mullo_epi64(core.simd.long2, core.simd.long2) @nogc nothrow;
+    static if(!is(typeof(_MM_FROUND_CUR_DIRECTION))) {
+        enum _MM_FROUND_CUR_DIRECTION = 0x04;
+    }
+
+
+
+
+    static if(!is(typeof(_MM_FROUND_TO_ZERO))) {
+        enum _MM_FROUND_TO_ZERO = 0x03;
+    }
+
+
+
+
+    static if(!is(typeof(_MM_FROUND_TO_POS_INF))) {
+        enum _MM_FROUND_TO_POS_INF = 0x02;
+    }
+
+
+
+
+    static if(!is(typeof(_MM_FROUND_TO_NEG_INF))) {
+        enum _MM_FROUND_TO_NEG_INF = 0x01;
+    }
+
+
+
+
+    static if(!is(typeof(_MM_FROUND_TO_NEAREST_INT))) {
+        enum _MM_FROUND_TO_NEAREST_INT = 0x00;
+    }
+    static if(!is(typeof(TIME_UTC))) {
+        enum TIME_UTC = 1;
+    }
+    static if(!is(typeof(_TIME_H))) {
+        enum _TIME_H = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_TERMIOS_H))) {
+        enum _TERMIOS_H = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(__NGREG))) {
+        enum __NGREG = 23;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_SYS_UCONTEXT_H))) {
+        enum _SYS_UCONTEXT_H = 1;
+    }
+    static if(!is(typeof(__BIT_TYPES_DEFINED__))) {
+        enum __BIT_TYPES_DEFINED__ = 1;
+    }
+    static if(!is(typeof(_SYS_TYPES_H))) {
+        enum _SYS_TYPES_H = 1;
+    }
+    static if(!is(typeof(CTIME))) {
+        enum CTIME = 0;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(CQUIT))) {
+        enum CQUIT = std.conv.octal!34;
+    }
+
+
+
+
+    static if(!is(typeof(CMIN))) {
+        enum CMIN = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(CSTATUS))) {
+        enum CSTATUS = '\0';
+    }
+
+
+
+
+
+
+    static if(!is(typeof(CERASE))) {
+        enum CERASE = std.conv.octal!177;
+    }
+
+
+
+
+    static if(!is(typeof(CEOL))) {
+        enum CEOL = '\0';
+    }
+    static if(!is(typeof(_MKNOD_VER))) {
+        enum _MKNOD_VER = 0;
+    }
+
+
+
+
+    static if(!is(typeof(S_BLKSIZE))) {
+        enum S_BLKSIZE = 512;
+    }
+    static if(!is(typeof(_SYS_STAT_H))) {
+        enum _SYS_STAT_H = 1;
+    }
+    static if(!is(typeof(_SYS_SOCKET_H))) {
+        enum _SYS_SOCKET_H = 1;
+    }
+    static if(!is(typeof(_SYS_SELECT_H))) {
+        enum _SYS_SELECT_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__HAVE_GENERIC_SELECTION))) {
+        enum __HAVE_GENERIC_SELECTION = 1;
+    }
+    static if(!is(typeof(__glibc_c99_flexarr_available))) {
+        enum __glibc_c99_flexarr_available = 1;
+    }
+    static if(!is(typeof(_SYS_CDEFS_H))) {
+        enum _SYS_CDEFS_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_STRINGS_H))) {
+        enum _STRINGS_H = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_STRING_H))) {
+        enum _STRING_H = 1;
+    }
+    static if(!is(typeof(EXIT_SUCCESS))) {
+        enum EXIT_SUCCESS = 0;
+    }
+
+
+
+
+    static if(!is(typeof(EXIT_FAILURE))) {
+        enum EXIT_FAILURE = 1;
+    }
+
+
+
+
+    static if(!is(typeof(RAND_MAX))) {
+        enum RAND_MAX = 2147483647;
+    }
+
+
+
+
+    static if(!is(typeof(__lldiv_t_defined))) {
+        enum __lldiv_t_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__ldiv_t_defined))) {
+        enum __ldiv_t_defined = 1;
+    }
+    static if(!is(typeof(_STDLIB_H))) {
+        enum _STDLIB_H = 1;
+    }
+    static if(!is(typeof(_STDINT_H))) {
+        enum _STDINT_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_STDC_PREDEF_H))) {
+        enum _STDC_PREDEF_H = 1;
+    }
+    static if(!is(typeof(_SETJMP_H))) {
+        enum _SETJMP_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_SEMAPHORE_H))) {
+        enum _SEMAPHORE_H = 1;
+    }
+    static if(!is(typeof(_SCHED_H))) {
+        enum _SCHED_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_RPC_NETDB_H))) {
+        enum _RPC_NETDB_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(NSS_BUFLEN_PASSWD))) {
+        enum NSS_BUFLEN_PASSWD = 1024;
+    }
+
+
+
+
+    static if(!is(typeof(_PWD_H))) {
+        enum _PWD_H = 1;
+    }
+    static if(!is(typeof(PTHREAD_ONCE_INIT))) {
+        enum PTHREAD_ONCE_INIT = 0;
+    }
+    static if(!is(typeof(_PTHREAD_H))) {
+        enum _PTHREAD_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_MSS_DESIRED))) {
+        enum TCP_MSS_DESIRED = 1220U;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_MSS_DEFAULT))) {
+        enum TCP_MSS_DEFAULT = 536U;
+    }
+    static if(!is(typeof(TCP_COOKIE_MAX))) {
+        enum TCP_COOKIE_MAX = 16;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_COOKIE_MIN))) {
+        enum TCP_COOKIE_MIN = 8;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_MD5SIG_FLAG_PREFIX))) {
+        enum TCP_MD5SIG_FLAG_PREFIX = 1;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_MD5SIG_MAXKEYLEN))) {
+        enum TCP_MD5SIG_MAXKEYLEN = 80;
+    }
+
+
+
+
+    static if(!is(typeof(TCPI_OPT_SYN_DATA))) {
+        enum TCPI_OPT_SYN_DATA = 32;
+    }
+
+
+
+
+    static if(!is(typeof(TCPI_OPT_ECN_SEEN))) {
+        enum TCPI_OPT_ECN_SEEN = 16;
+    }
+
+
+
+
+    static if(!is(typeof(TCPI_OPT_ECN))) {
+        enum TCPI_OPT_ECN = 8;
+    }
+
+
+
+
+    static if(!is(typeof(TCPI_OPT_WSCALE))) {
+        enum TCPI_OPT_WSCALE = 4;
+    }
+
+
+
+
+    static if(!is(typeof(TCPI_OPT_SACK))) {
+        enum TCPI_OPT_SACK = 2;
+    }
+
+
+
+
+    static if(!is(typeof(TCPI_OPT_TIMESTAMPS))) {
+        enum TCPI_OPT_TIMESTAMPS = 1;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_TCP))) {
+        enum SOL_TCP = 6;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_MAX_WINSHIFT))) {
+        enum TCP_MAX_WINSHIFT = 14;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_MAXWIN))) {
+        enum TCP_MAXWIN = 65535;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_MSS))) {
+        enum TCP_MSS = 512;
+    }
+    static if(!is(typeof(TCPOLEN_TIMESTAMP))) {
+        enum TCPOLEN_TIMESTAMP = 10;
+    }
+
+
+
+
+    static if(!is(typeof(TCPOPT_TIMESTAMP))) {
+        enum TCPOPT_TIMESTAMP = 8;
+    }
+
+
+
+
+    static if(!is(typeof(TCPOPT_SACK))) {
+        enum TCPOPT_SACK = 5;
+    }
+
+
+
+
+    static if(!is(typeof(TCPOLEN_SACK_PERMITTED))) {
+        enum TCPOLEN_SACK_PERMITTED = 2;
+    }
+
+
+
+
+    static if(!is(typeof(TCPOPT_SACK_PERMITTED))) {
+        enum TCPOPT_SACK_PERMITTED = 4;
+    }
+
+
+
+
+    static if(!is(typeof(TCPOLEN_WINDOW))) {
+        enum TCPOLEN_WINDOW = 3;
+    }
+    static if(!is(typeof(TCPOPT_WINDOW))) {
+        enum TCPOPT_WINDOW = 3;
+    }
+
+
+
+
+    static if(!is(typeof(TCPOLEN_MAXSEG))) {
+        enum TCPOLEN_MAXSEG = 4;
+    }
+
+
+
+
+    static if(!is(typeof(TCPOPT_MAXSEG))) {
+        enum TCPOPT_MAXSEG = 2;
+    }
+
+
+
+
+    static if(!is(typeof(TCPOPT_NOP))) {
+        enum TCPOPT_NOP = 1;
+    }
+
+
+
+
+    static if(!is(typeof(TCPOPT_EOL))) {
+        enum TCPOPT_EOL = 0;
+    }
+
+
+
+
+    static if(!is(typeof(TH_URG))) {
+        enum TH_URG = 0x20;
+    }
+
+
+
+
+    static if(!is(typeof(TH_ACK))) {
+        enum TH_ACK = 0x10;
+    }
+
+
+
+
+    static if(!is(typeof(TH_PUSH))) {
+        enum TH_PUSH = 0x08;
+    }
+
+
+
+
+    static if(!is(typeof(TH_RST))) {
+        enum TH_RST = 0x04;
+    }
+
+
+
+
+    static if(!is(typeof(TH_SYN))) {
+        enum TH_SYN = 0x02;
+    }
+
+
+
+
+    static if(!is(typeof(TH_FIN))) {
+        enum TH_FIN = 0x01;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(TCP_REPAIR_OFF))) {
+        enum TCP_REPAIR_OFF = 0;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_REPAIR_ON))) {
+        enum TCP_REPAIR_ON = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(TCP_INQ))) {
+        enum TCP_INQ = 36;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_ZEROCOPY_RECEIVE))) {
+        enum TCP_ZEROCOPY_RECEIVE = 35;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_FASTOPEN_NO_COOKIE))) {
+        enum TCP_FASTOPEN_NO_COOKIE = 34;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_FASTOPEN_KEY))) {
+        enum TCP_FASTOPEN_KEY = 33;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_MD5SIG_EXT))) {
+        enum TCP_MD5SIG_EXT = 32;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_ULP))) {
+        enum TCP_ULP = 31;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_FASTOPEN_CONNECT))) {
+        enum TCP_FASTOPEN_CONNECT = 30;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_REPAIR_WINDOW))) {
+        enum TCP_REPAIR_WINDOW = 29;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_SAVED_SYN))) {
+        enum TCP_SAVED_SYN = 28;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_SAVE_SYN))) {
+        enum TCP_SAVE_SYN = 27;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_CC_INFO))) {
+        enum TCP_CC_INFO = 26;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_NOTSENT_LOWAT))) {
+        enum TCP_NOTSENT_LOWAT = 25;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_TIMESTAMP))) {
+        enum TCP_TIMESTAMP = 24;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_FASTOPEN))) {
+        enum TCP_FASTOPEN = 23;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_REPAIR_OPTIONS))) {
+        enum TCP_REPAIR_OPTIONS = 22;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_QUEUE_SEQ))) {
+        enum TCP_QUEUE_SEQ = 21;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_REPAIR_QUEUE))) {
+        enum TCP_REPAIR_QUEUE = 20;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_REPAIR))) {
+        enum TCP_REPAIR = 19;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_USER_TIMEOUT))) {
+        enum TCP_USER_TIMEOUT = 18;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_THIN_DUPACK))) {
+        enum TCP_THIN_DUPACK = 17;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_THIN_LINEAR_TIMEOUTS))) {
+        enum TCP_THIN_LINEAR_TIMEOUTS = 16;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_COOKIE_TRANSACTIONS))) {
+        enum TCP_COOKIE_TRANSACTIONS = 15;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_MD5SIG))) {
+        enum TCP_MD5SIG = 14;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_CONGESTION))) {
+        enum TCP_CONGESTION = 13;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_QUICKACK))) {
+        enum TCP_QUICKACK = 12;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_INFO))) {
+        enum TCP_INFO = 11;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_WINDOW_CLAMP))) {
+        enum TCP_WINDOW_CLAMP = 10;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_DEFER_ACCEPT))) {
+        enum TCP_DEFER_ACCEPT = 9;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_LINGER2))) {
+        enum TCP_LINGER2 = 8;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_SYNCNT))) {
+        enum TCP_SYNCNT = 7;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_KEEPCNT))) {
+        enum TCP_KEEPCNT = 6;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_KEEPINTVL))) {
+        enum TCP_KEEPINTVL = 5;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_KEEPIDLE))) {
+        enum TCP_KEEPIDLE = 4;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_CORK))) {
+        enum TCP_CORK = 3;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_MAXSEG))) {
+        enum TCP_MAXSEG = 2;
+    }
+
+
+
+
+    static if(!is(typeof(TCP_NODELAY))) {
+        enum TCP_NODELAY = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_NETINET_TCP_H))) {
+        enum _NETINET_TCP_H = 1;
+    }
+    static if(!is(typeof(INET6_ADDRSTRLEN))) {
+        enum INET6_ADDRSTRLEN = 46;
+    }
+
+
+
+
+    static if(!is(typeof(INET_ADDRSTRLEN))) {
+        enum INET_ADDRSTRLEN = 16;
+    }
+    static if(!is(typeof(IN_LOOPBACKNET))) {
+        enum IN_LOOPBACKNET = 127;
+    }
+    static if(!is(typeof(IN_CLASSC_NSHIFT))) {
+        enum IN_CLASSC_NSHIFT = 8;
+    }
+
+
+
+
+    static if(!is(typeof(IN_CLASSC_NET))) {
+        enum IN_CLASSC_NET = 0xffffff00;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IN_CLASSB_MAX))) {
+        enum IN_CLASSB_MAX = 65536;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IN_CLASSB_NSHIFT))) {
+        enum IN_CLASSB_NSHIFT = 16;
+    }
+
+
+
+
+    static if(!is(typeof(IN_CLASSB_NET))) {
+        enum IN_CLASSB_NET = 0xffff0000;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IN_CLASSA_MAX))) {
+        enum IN_CLASSA_MAX = 128;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IN_CLASSA_NSHIFT))) {
+        enum IN_CLASSA_NSHIFT = 24;
+    }
+
+
+
+
+    static if(!is(typeof(IN_CLASSA_NET))) {
+        enum IN_CLASSA_NET = 0xff000000;
+    }
+    static if(!is(typeof(_NETINET_IN_H))) {
+        enum _NETINET_IN_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(NI_DGRAM))) {
+        enum NI_DGRAM = 16;
+    }
+
+
+
+
+    static if(!is(typeof(NI_NAMEREQD))) {
+        enum NI_NAMEREQD = 8;
+    }
+
+
+
+
+    static if(!is(typeof(NI_NOFQDN))) {
+        enum NI_NOFQDN = 4;
+    }
+
+
+
+
+    static if(!is(typeof(NI_NUMERICSERV))) {
+        enum NI_NUMERICSERV = 2;
+    }
+
+
+
+
+    static if(!is(typeof(NI_NUMERICHOST))) {
+        enum NI_NUMERICHOST = 1;
+    }
+
+
+
+
+    static if(!is(typeof(NI_MAXSERV))) {
+        enum NI_MAXSERV = 32;
+    }
+
+
+
+
+    static if(!is(typeof(NI_MAXHOST))) {
+        enum NI_MAXHOST = 1025;
+    }
+    static if(!is(typeof(AI_NUMERICSERV))) {
+        enum AI_NUMERICSERV = 0x0400;
+    }
+
+
+
+
+    static if(!is(typeof(AI_ADDRCONFIG))) {
+        enum AI_ADDRCONFIG = 0x0020;
+    }
+
+
+
+
+    static if(!is(typeof(AI_ALL))) {
+        enum AI_ALL = 0x0010;
+    }
+
+
+
+
+    static if(!is(typeof(AI_V4MAPPED))) {
+        enum AI_V4MAPPED = 0x0008;
+    }
+
+
+
+
+    static if(!is(typeof(AI_NUMERICHOST))) {
+        enum AI_NUMERICHOST = 0x0004;
+    }
+
+
+
+
+    static if(!is(typeof(AI_CANONNAME))) {
+        enum AI_CANONNAME = 0x0002;
+    }
+
+
+
+
+    static if(!is(typeof(AI_PASSIVE))) {
+        enum AI_PASSIVE = 0x0001;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IPPORT_RESERVED))) {
+        enum IPPORT_RESERVED = 1024;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(NETDB_SUCCESS))) {
+        enum NETDB_SUCCESS = 0;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(NO_DATA))) {
+        enum NO_DATA = 4;
+    }
+
+
+
+
+    static if(!is(typeof(NO_RECOVERY))) {
+        enum NO_RECOVERY = 3;
+    }
+
+
+
+
+    static if(!is(typeof(TRY_AGAIN))) {
+        enum TRY_AGAIN = 2;
+    }
+
+
+
+
+    static if(!is(typeof(HOST_NOT_FOUND))) {
+        enum HOST_NOT_FOUND = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_PATH_SERVICES))) {
+        enum _PATH_SERVICES = "/etc/services";
+    }
+
+
+
+
+    static if(!is(typeof(_PATH_PROTOCOLS))) {
+        enum _PATH_PROTOCOLS = "/etc/protocols";
+    }
+
+
+
+
+    static if(!is(typeof(_PATH_NSSWITCH_CONF))) {
+        enum _PATH_NSSWITCH_CONF = "/etc/nsswitch.conf";
+    }
+
+
+
+
+    static if(!is(typeof(_PATH_NETWORKS))) {
+        enum _PATH_NETWORKS = "/etc/networks";
+    }
+
+
+
+
+    static if(!is(typeof(_PATH_HOSTS))) {
+        enum _PATH_HOSTS = "/etc/hosts";
+    }
+
+
+
+
+    static if(!is(typeof(_PATH_HEQUIV))) {
+        enum _PATH_HEQUIV = "/etc/hosts.equiv";
+    }
+
+
+
+
+    static if(!is(typeof(_NETDB_H))) {
+        enum _NETDB_H = 1;
+    }
+    static if(!is(typeof(M_SQRT1_2))) {
+        enum M_SQRT1_2 = 0.70710678118654752440;
+    }
+
+
+
+
+    static if(!is(typeof(M_SQRT2))) {
+        enum M_SQRT2 = 1.41421356237309504880;
+    }
+
+
+
+
+    static if(!is(typeof(M_2_SQRTPI))) {
+        enum M_2_SQRTPI = 1.12837916709551257390;
+    }
+
+
+
+
+    static if(!is(typeof(M_2_PI))) {
+        enum M_2_PI = 0.63661977236758134308;
+    }
+
+
+
+
+    static if(!is(typeof(M_1_PI))) {
+        enum M_1_PI = 0.31830988618379067154;
+    }
+
+
+
+
+    static if(!is(typeof(M_PI_4))) {
+        enum M_PI_4 = 0.78539816339744830962;
+    }
+
+
+
+
+    static if(!is(typeof(M_PI_2))) {
+        enum M_PI_2 = 1.57079632679489661923;
+    }
+
+
+
+
+    static if(!is(typeof(M_PI))) {
+        enum M_PI = 3.14159265358979323846;
+    }
+
+
+
+
+    static if(!is(typeof(M_LN10))) {
+        enum M_LN10 = 2.30258509299404568402;
+    }
+
+
+
+
+    static if(!is(typeof(M_LN2))) {
+        enum M_LN2 = 0.69314718055994530942;
+    }
+
+
+
+
+    static if(!is(typeof(M_LOG10E))) {
+        enum M_LOG10E = 0.43429448190325182765;
+    }
+
+
+
+
+    static if(!is(typeof(M_LOG2E))) {
+        enum M_LOG2E = 1.4426950408889634074;
+    }
+
+
+
+
+    static if(!is(typeof(M_E))) {
+        enum M_E = 2.7182818284590452354;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(MATH_ERREXCEPT))) {
+        enum MATH_ERREXCEPT = 2;
+    }
+
+
+
+
+    static if(!is(typeof(MATH_ERRNO))) {
+        enum MATH_ERRNO = 1;
+    }
+    static if(!is(typeof(FP_NORMAL))) {
+        enum FP_NORMAL = 4;
+    }
+
+
+
+
+    static if(!is(typeof(FP_SUBNORMAL))) {
+        enum FP_SUBNORMAL = 3;
+    }
+
+
+
+
+    static if(!is(typeof(FP_ZERO))) {
+        enum FP_ZERO = 2;
+    }
+
+
+
+
+    static if(!is(typeof(FP_INFINITE))) {
+        enum FP_INFINITE = 1;
+    }
+
+
+
+
+    static if(!is(typeof(FP_NAN))) {
+        enum FP_NAN = 0;
+    }
+    static if(!is(typeof(__MATH_DECLARING_FLOATN))) {
+        enum __MATH_DECLARING_FLOATN = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__MATH_DECLARING_DOUBLE))) {
+        enum __MATH_DECLARING_DOUBLE = 0;
+    }
+    static if(!is(typeof(__MATH_DECLARE_LDOUBLE))) {
+        enum __MATH_DECLARE_LDOUBLE = 1;
+    }
+    static if(!is(typeof(_MATH_H))) {
+        enum _MATH_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__FD_SETSIZE))) {
+        enum __FD_SETSIZE = 1024;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(RTSIG_MAX))) {
+        enum RTSIG_MAX = 32;
+    }
+
+
+
+
+    static if(!is(typeof(XATTR_LIST_MAX))) {
+        enum XATTR_LIST_MAX = 65536;
+    }
+
+
+
+
+    static if(!is(typeof(XATTR_SIZE_MAX))) {
+        enum XATTR_SIZE_MAX = 65536;
+    }
+
+
+
+
+    static if(!is(typeof(XATTR_NAME_MAX))) {
+        enum XATTR_NAME_MAX = 255;
+    }
+
+
+
+
+    static if(!is(typeof(PIPE_BUF))) {
+        enum PIPE_BUF = 4096;
+    }
+
+
+
+
+    static if(!is(typeof(PATH_MAX))) {
+        enum PATH_MAX = 4096;
+    }
+
+
+
+
+    static if(!is(typeof(NAME_MAX))) {
+        enum NAME_MAX = 255;
+    }
+
+
+
+
+    static if(!is(typeof(MAX_INPUT))) {
+        enum MAX_INPUT = 255;
+    }
+
+
+
+
+    static if(!is(typeof(MAX_CANON))) {
+        enum MAX_CANON = 255;
+    }
+
+
+
+
+    static if(!is(typeof(LINK_MAX))) {
+        enum LINK_MAX = 127;
+    }
+
+
+
+
+    static if(!is(typeof(ARG_MAX))) {
+        enum ARG_MAX = 131072;
+    }
+
+
+
+
+    static if(!is(typeof(NGROUPS_MAX))) {
+        enum NGROUPS_MAX = 65536;
+    }
+
+
+
+
+    static if(!is(typeof(NR_OPEN))) {
+        enum NR_OPEN = 1024;
+    }
+    static if(!is(typeof(UV_VERSION_SUFFIX))) {
+        enum UV_VERSION_SUFFIX = "dev";
+    }
+
+
+
+
+    static if(!is(typeof(UV_VERSION_IS_RELEASE))) {
+        enum UV_VERSION_IS_RELEASE = 0;
+    }
+    static if(!is(typeof(UV_VERSION_PATCH))) {
+        enum UV_VERSION_PATCH = 0;
+    }
+
+
+
+
+    static if(!is(typeof(UV_VERSION_MINOR))) {
+        enum UV_VERSION_MINOR = 0;
+    }
+
+
+
+
+    static if(!is(typeof(UV_VERSION_MAJOR))) {
+        enum UV_VERSION_MAJOR = 2;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(UV_FS_O_TEMPORARY))) {
+        enum UV_FS_O_TEMPORARY = 0;
+    }
+
+
+
+
+    static if(!is(typeof(UV_FS_O_SEQUENTIAL))) {
+        enum UV_FS_O_SEQUENTIAL = 0;
+    }
+
+
+
+
+    static if(!is(typeof(UV_FS_O_SHORT_LIVED))) {
+        enum UV_FS_O_SHORT_LIVED = 0;
+    }
+
+
+
+
+    static if(!is(typeof(UV_FS_O_RANDOM))) {
+        enum UV_FS_O_RANDOM = 0;
+    }
+    static if(!is(typeof(UV_FS_O_SYMLINK))) {
+        enum UV_FS_O_SYMLINK = 0;
+    }
+    static if(!is(typeof(UV_FS_O_NOATIME))) {
+        enum UV_FS_O_NOATIME = 0;
+    }
+
+
+
+
+    static if(!is(typeof(UV_FS_O_EXLOCK))) {
+        enum UV_FS_O_EXLOCK = 0;
+    }
+    static if(!is(typeof(UV_FS_O_DIRECT))) {
+        enum UV_FS_O_DIRECT = 0;
+    }
+    static if(!is(typeof(UV_FS_SYMLINK_JUNCTION))) {
+        enum UV_FS_SYMLINK_JUNCTION = 0x0002;
+    }
+
+
+
+
+    static if(!is(typeof(UV_FS_SYMLINK_DIR))) {
+        enum UV_FS_SYMLINK_DIR = 0x0001;
+    }
+
+
+
+
+    static if(!is(typeof(UV_FS_COPYFILE_FICLONE_FORCE))) {
+        enum UV_FS_COPYFILE_FICLONE_FORCE = 0x0004;
+    }
+
+
+
+
+    static if(!is(typeof(UV_FS_COPYFILE_FICLONE))) {
+        enum UV_FS_COPYFILE_FICLONE = 0x0002;
+    }
+
+
+
+
+    static if(!is(typeof(UV_FS_COPYFILE_EXCL))) {
+        enum UV_FS_COPYFILE_EXCL = 0x0001;
+    }
+    static if(!is(typeof(UV_PRIORITY_NORMAL))) {
+        enum UV_PRIORITY_NORMAL = 0;
+    }
+
+
+
+
+    static if(!is(typeof(UV_PRIORITY_BELOW_NORMAL))) {
+        enum UV_PRIORITY_BELOW_NORMAL = 10;
+    }
+
+
+
+
+    static if(!is(typeof(UV_PRIORITY_LOW))) {
+        enum UV_PRIORITY_LOW = 19;
+    }
+    static if(!is(typeof(JULIA_VERSION_IS_RELEASE))) {
+        enum JULIA_VERSION_IS_RELEASE = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JULIA_VERSION_PATCH))) {
+        enum JULIA_VERSION_PATCH = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JULIA_VERSION_MINOR))) {
+        enum JULIA_VERSION_MINOR = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JULIA_VERSION_MAJOR))) {
+        enum JULIA_VERSION_MAJOR = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JULIA_VERSION_STRING))) {
+        enum JULIA_VERSION_STRING = "1.1.1";
+    }
+    static if(!is(typeof(JL_CPU_WAKE_NOOP))) {
+        enum JL_CPU_WAKE_NOOP = 1;
+    }
+    static if(!is(typeof(JL_GC_STATE_SAFE))) {
+        enum JL_GC_STATE_SAFE = 2;
+    }
+
+
+
+
+    static if(!is(typeof(JL_GC_STATE_WAITING))) {
+        enum JL_GC_STATE_WAITING = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_MAX_BT_SIZE))) {
+        enum JL_MAX_BT_SIZE = 80000;
+    }
+
+
+
+
+    static if(!is(typeof(JL_N_STACK_POOLS))) {
+        enum JL_N_STACK_POOLS = 16;
+    }
+
+
+
+
+    static if(!is(typeof(JL_GC_N_POOLS))) {
+        enum JL_GC_N_POOLS = 41;
+    }
+    static if(!is(typeof(JL_OPTIONS_USE_COMPILED_MODULES_NO))) {
+        enum JL_OPTIONS_USE_COMPILED_MODULES_NO = 0;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_USE_COMPILED_MODULES_YES))) {
+        enum JL_OPTIONS_USE_COMPILED_MODULES_YES = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_USE_SYSIMAGE_NATIVE_CODE_NO))) {
+        enum JL_OPTIONS_USE_SYSIMAGE_NATIVE_CODE_NO = 0;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_USE_SYSIMAGE_NATIVE_CODE_YES))) {
+        enum JL_OPTIONS_USE_SYSIMAGE_NATIVE_CODE_YES = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_HANDLE_SIGNALS_OFF))) {
+        enum JL_OPTIONS_HANDLE_SIGNALS_OFF = 0;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_HANDLE_SIGNALS_ON))) {
+        enum JL_OPTIONS_HANDLE_SIGNALS_ON = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_FAST_MATH_DEFAULT))) {
+        enum JL_OPTIONS_FAST_MATH_DEFAULT = 0;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_FAST_MATH_OFF))) {
+        enum JL_OPTIONS_FAST_MATH_OFF = 2;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_FAST_MATH_ON))) {
+        enum JL_OPTIONS_FAST_MATH_ON = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_POLLY_OFF))) {
+        enum JL_OPTIONS_POLLY_OFF = 0;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_POLLY_ON))) {
+        enum JL_OPTIONS_POLLY_ON = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_WARN_OVERWRITE_ON))) {
+        enum JL_OPTIONS_WARN_OVERWRITE_ON = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_WARN_OVERWRITE_OFF))) {
+        enum JL_OPTIONS_WARN_OVERWRITE_OFF = 0;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_DEPWARN_ERROR))) {
+        enum JL_OPTIONS_DEPWARN_ERROR = 2;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_DEPWARN_ON))) {
+        enum JL_OPTIONS_DEPWARN_ON = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_DEPWARN_OFF))) {
+        enum JL_OPTIONS_DEPWARN_OFF = 0;
+    }
+
+
+
+
+    static if(!is(typeof(JL_LOGLEVEL_ABOVEMAX))) {
+        enum JL_LOGLEVEL_ABOVEMAX = 1000001;
+    }
+
+
+
+
+    static if(!is(typeof(JL_LOGLEVEL_ERROR))) {
+        enum JL_LOGLEVEL_ERROR = 2000;
+    }
+
+
+
+
+    static if(!is(typeof(JL_LOGLEVEL_WARN))) {
+        enum JL_LOGLEVEL_WARN = 1000;
+    }
+
+
+
+
+    static if(!is(typeof(JL_LOGLEVEL_INFO))) {
+        enum JL_LOGLEVEL_INFO = 0;
+    }
+    static if(!is(typeof(JL_OPTIONS_STARTUPFILE_OFF))) {
+        enum JL_OPTIONS_STARTUPFILE_OFF = 2;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_STARTUPFILE_ON))) {
+        enum JL_OPTIONS_STARTUPFILE_ON = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_HISTORYFILE_OFF))) {
+        enum JL_OPTIONS_HISTORYFILE_OFF = 0;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_HISTORYFILE_ON))) {
+        enum JL_OPTIONS_HISTORYFILE_ON = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_COLOR_OFF))) {
+        enum JL_OPTIONS_COLOR_OFF = 2;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_COLOR_ON))) {
+        enum JL_OPTIONS_COLOR_ON = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_COLOR_AUTO))) {
+        enum JL_OPTIONS_COLOR_AUTO = 0;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_COMPILE_MIN))) {
+        enum JL_OPTIONS_COMPILE_MIN = 3;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_COMPILE_ALL))) {
+        enum JL_OPTIONS_COMPILE_ALL = 2;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_COMPILE_ON))) {
+        enum JL_OPTIONS_COMPILE_ON = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_COMPILE_OFF))) {
+        enum JL_OPTIONS_COMPILE_OFF = 0;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_COMPILE_DEFAULT))) {
+        enum JL_OPTIONS_COMPILE_DEFAULT = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_CHECK_BOUNDS_OFF))) {
+        enum JL_OPTIONS_CHECK_BOUNDS_OFF = 2;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_CHECK_BOUNDS_ON))) {
+        enum JL_OPTIONS_CHECK_BOUNDS_ON = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_OPTIONS_CHECK_BOUNDS_DEFAULT))) {
+        enum JL_OPTIONS_CHECK_BOUNDS_DEFAULT = 0;
+    }
+
+
+
+
+    static if(!is(typeof(JL_LOG_ALL))) {
+        enum JL_LOG_ALL = 2;
+    }
+
+
+
+
+    static if(!is(typeof(JL_LOG_USER))) {
+        enum JL_LOG_USER = 1;
+    }
+
+
+
+
+    static if(!is(typeof(JL_LOG_NONE))) {
+        enum JL_LOG_NONE = 0;
+    }
+    static if(!is(typeof(jl_setjmp_name))) {
+        enum jl_setjmp_name = "__sigsetjmp";
+    }
+    static if(!is(typeof(IOS_BUFSIZE))) {
+        enum IOS_BUFSIZE = 131072;
+    }
+
+
+
+
+    static if(!is(typeof(IOS_INLSIZE))) {
+        enum IOS_INLSIZE = 54;
+    }
+    static if(!is(typeof(HT_N_INLINE))) {
+        enum HT_N_INLINE = 32;
+    }
+    static if(!is(typeof(BIT31))) {
+        enum BIT31 = 0x80000000;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(S32_MAX))) {
+        enum S32_MAX = 2147483647L;
+    }
+
+
+
+
+    static if(!is(typeof(U32_MAX))) {
+        enum U32_MAX = 4294967295L;
+    }
+
+
+
+
+    static if(!is(typeof(BIT63))) {
+        enum BIT63 = 0x8000000000000000L;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(S64_MAX))) {
+        enum S64_MAX = 9223372036854775807L;
+    }
+
+
+
+
+    static if(!is(typeof(U64_MAX))) {
+        enum U64_MAX = 18446744073709551615UL;
+    }
+
+
+
+
+    static if(!is(typeof(FLT_MAXINT))) {
+        enum FLT_MAXINT = 16777216;
+    }
+
+
+
+
+    static if(!is(typeof(DBL_MAXINT))) {
+        enum DBL_MAXINT = 9007199254740992L;
+    }
+    static if(!is(typeof(NBITS))) {
+        enum NBITS = 64;
+    }
+
+
+
+
+    static if(!is(typeof(TOP_BIT))) {
+        enum TOP_BIT = 0x8000000000000000;
+    }
+    static if(!is(typeof(PATHLISTSEPSTRING))) {
+        enum PATHLISTSEPSTRING = ":";
+    }
+
+
+
+
+    static if(!is(typeof(PATHSEPSTRING))) {
+        enum PATHSEPSTRING = "/";
+    }
+    static if(!is(typeof(AL_N_INLINE))) {
+        enum AL_N_INLINE = 29;
+    }
+    static if(!is(typeof(SCNxFAST8))) {
+        enum SCNxFAST8 = "hhx";
+    }
+    static if(!is(typeof(SCNxLEAST32))) {
+        enum SCNxLEAST32 = "x";
+    }
+
+
+
+
+    static if(!is(typeof(SCNxLEAST16))) {
+        enum SCNxLEAST16 = "hx";
+    }
+
+
+
+
+    static if(!is(typeof(SCNxLEAST8))) {
+        enum SCNxLEAST8 = "hhx";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SCNx32))) {
+        enum SCNx32 = "x";
+    }
+
+
+
+
+    static if(!is(typeof(SCNx16))) {
+        enum SCNx16 = "hx";
+    }
+
+
+
+
+    static if(!is(typeof(SCNx8))) {
+        enum SCNx8 = "hhx";
+    }
+    static if(!is(typeof(SCNoFAST8))) {
+        enum SCNoFAST8 = "hho";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SCNoLEAST32))) {
+        enum SCNoLEAST32 = "o";
+    }
+
+
+
+
+    static if(!is(typeof(SCNoLEAST16))) {
+        enum SCNoLEAST16 = "ho";
+    }
+
+
+
+
+    static if(!is(typeof(SCNoLEAST8))) {
+        enum SCNoLEAST8 = "hho";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SCNo32))) {
+        enum SCNo32 = "o";
+    }
+
+
+
+
+    static if(!is(typeof(SCNo16))) {
+        enum SCNo16 = "ho";
+    }
+
+
+
+
+    static if(!is(typeof(SCNo8))) {
+        enum SCNo8 = "hho";
+    }
+    static if(!is(typeof(SCNuFAST8))) {
+        enum SCNuFAST8 = "hhu";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SCNuLEAST32))) {
+        enum SCNuLEAST32 = "u";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SCNuLEAST16))) {
+        enum SCNuLEAST16 = "hu";
+    }
+
+
+
+
+    static if(!is(typeof(SCNuLEAST8))) {
+        enum SCNuLEAST8 = "hhu";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SCNu32))) {
+        enum SCNu32 = "u";
+    }
+
+
+
+
+    static if(!is(typeof(SCNu16))) {
+        enum SCNu16 = "hu";
+    }
+
+
+
+
+    static if(!is(typeof(SCNu8))) {
+        enum SCNu8 = "hhu";
+    }
+    static if(!is(typeof(SCNiFAST8))) {
+        enum SCNiFAST8 = "hhi";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SCNiLEAST32))) {
+        enum SCNiLEAST32 = "i";
+    }
+
+
+
+
+    static if(!is(typeof(SCNiLEAST16))) {
+        enum SCNiLEAST16 = "hi";
+    }
+
+
+
+
+    static if(!is(typeof(SCNiLEAST8))) {
+        enum SCNiLEAST8 = "hhi";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SCNi32))) {
+        enum SCNi32 = "i";
+    }
+
+
+
+
+    static if(!is(typeof(SCNi16))) {
+        enum SCNi16 = "hi";
+    }
+
+
+
+
+    static if(!is(typeof(SCNi8))) {
+        enum SCNi8 = "hhi";
+    }
+    static if(!is(typeof(SCNdFAST8))) {
+        enum SCNdFAST8 = "hhd";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SCNdLEAST32))) {
+        enum SCNdLEAST32 = "d";
+    }
+
+
+
+
+    static if(!is(typeof(SCNdLEAST16))) {
+        enum SCNdLEAST16 = "hd";
+    }
+
+
+
+
+    static if(!is(typeof(SCNdLEAST8))) {
+        enum SCNdLEAST8 = "hhd";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SCNd32))) {
+        enum SCNd32 = "d";
+    }
+
+
+
+
+    static if(!is(typeof(SCNd16))) {
+        enum SCNd16 = "hd";
+    }
+
+
+
+
+    static if(!is(typeof(SCNd8))) {
+        enum SCNd8 = "hhd";
+    }
+    static if(!is(typeof(PRIXFAST8))) {
+        enum PRIXFAST8 = "X";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(PRIXLEAST32))) {
+        enum PRIXLEAST32 = "X";
+    }
+
+
+
+
+    static if(!is(typeof(PRIXLEAST16))) {
+        enum PRIXLEAST16 = "X";
+    }
+
+
+
+
+    static if(!is(typeof(PRIXLEAST8))) {
+        enum PRIXLEAST8 = "X";
+    }
+    static if(!is(typeof(PRIX32))) {
+        enum PRIX32 = "X";
+    }
+
+
+
+
+    static if(!is(typeof(PRIX16))) {
+        enum PRIX16 = "X";
+    }
+
+
+
+
+    static if(!is(typeof(PRIX8))) {
+        enum PRIX8 = "X";
+    }
+    static if(!is(typeof(PRIxFAST8))) {
+        enum PRIxFAST8 = "x";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(PRIxLEAST32))) {
+        enum PRIxLEAST32 = "x";
+    }
+
+
+
+
+    static if(!is(typeof(PRIxLEAST16))) {
+        enum PRIxLEAST16 = "x";
+    }
+
+
+
+
+    static if(!is(typeof(PRIxLEAST8))) {
+        enum PRIxLEAST8 = "x";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(PRIx32))) {
+        enum PRIx32 = "x";
+    }
+
+
+
+
+    static if(!is(typeof(PRIx16))) {
+        enum PRIx16 = "x";
+    }
+
+
+
+
+    static if(!is(typeof(PRIx8))) {
+        enum PRIx8 = "x";
+    }
+    static if(!is(typeof(PRIuFAST8))) {
+        enum PRIuFAST8 = "u";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(PRIuLEAST32))) {
+        enum PRIuLEAST32 = "u";
+    }
+
+
+
+
+    static if(!is(typeof(PRIuLEAST16))) {
+        enum PRIuLEAST16 = "u";
+    }
+
+
+
+
+    static if(!is(typeof(PRIuLEAST8))) {
+        enum PRIuLEAST8 = "u";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(PRIu32))) {
+        enum PRIu32 = "u";
+    }
+
+
+
+
+    static if(!is(typeof(PRIu16))) {
+        enum PRIu16 = "u";
+    }
+
+
+
+
+    static if(!is(typeof(PRIu8))) {
+        enum PRIu8 = "u";
+    }
+    static if(!is(typeof(PRIoFAST8))) {
+        enum PRIoFAST8 = "o";
+    }
+    static if(!is(typeof(PRIoLEAST32))) {
+        enum PRIoLEAST32 = "o";
+    }
+
+
+
+
+    static if(!is(typeof(PRIoLEAST16))) {
+        enum PRIoLEAST16 = "o";
+    }
+
+
+
+
+    static if(!is(typeof(PRIoLEAST8))) {
+        enum PRIoLEAST8 = "o";
+    }
+    static if(!is(typeof(_CMP_EQ_OQ))) {
+        enum _CMP_EQ_OQ = 0x00;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_LT_OS))) {
+        enum _CMP_LT_OS = 0x01;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_LE_OS))) {
+        enum _CMP_LE_OS = 0x02;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_UNORD_Q))) {
+        enum _CMP_UNORD_Q = 0x03;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NEQ_UQ))) {
+        enum _CMP_NEQ_UQ = 0x04;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NLT_US))) {
+        enum _CMP_NLT_US = 0x05;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NLE_US))) {
+        enum _CMP_NLE_US = 0x06;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_ORD_Q))) {
+        enum _CMP_ORD_Q = 0x07;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_EQ_UQ))) {
+        enum _CMP_EQ_UQ = 0x08;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NGE_US))) {
+        enum _CMP_NGE_US = 0x09;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NGT_US))) {
+        enum _CMP_NGT_US = 0x0a;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_FALSE_OQ))) {
+        enum _CMP_FALSE_OQ = 0x0b;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NEQ_OQ))) {
+        enum _CMP_NEQ_OQ = 0x0c;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_GE_OS))) {
+        enum _CMP_GE_OS = 0x0d;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_GT_OS))) {
+        enum _CMP_GT_OS = 0x0e;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_TRUE_UQ))) {
+        enum _CMP_TRUE_UQ = 0x0f;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_EQ_OS))) {
+        enum _CMP_EQ_OS = 0x10;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_LT_OQ))) {
+        enum _CMP_LT_OQ = 0x11;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_LE_OQ))) {
+        enum _CMP_LE_OQ = 0x12;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_UNORD_S))) {
+        enum _CMP_UNORD_S = 0x13;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NEQ_US))) {
+        enum _CMP_NEQ_US = 0x14;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NLT_UQ))) {
+        enum _CMP_NLT_UQ = 0x15;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NLE_UQ))) {
+        enum _CMP_NLE_UQ = 0x16;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_ORD_S))) {
+        enum _CMP_ORD_S = 0x17;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_EQ_US))) {
+        enum _CMP_EQ_US = 0x18;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NGE_UQ))) {
+        enum _CMP_NGE_UQ = 0x19;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NGT_UQ))) {
+        enum _CMP_NGT_UQ = 0x1a;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_FALSE_OS))) {
+        enum _CMP_FALSE_OS = 0x1b;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_NEQ_OS))) {
+        enum _CMP_NEQ_OS = 0x1c;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_GE_OQ))) {
+        enum _CMP_GE_OQ = 0x1d;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_GT_OQ))) {
+        enum _CMP_GT_OQ = 0x1e;
+    }
+
+
+
+
+    static if(!is(typeof(_CMP_TRUE_US))) {
+        enum _CMP_TRUE_US = 0x1f;
+    }
+    static if(!is(typeof(PRIo32))) {
+        enum PRIo32 = "o";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(PRIo16))) {
+        enum PRIo16 = "o";
+    }
+
+
+
+
+    static if(!is(typeof(PRIo8))) {
+        enum PRIo8 = "o";
+    }
+    static if(!is(typeof(PRIiFAST8))) {
+        enum PRIiFAST8 = "i";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(PRIiLEAST32))) {
+        enum PRIiLEAST32 = "i";
+    }
+
+
+
+
+    static if(!is(typeof(PRIiLEAST16))) {
+        enum PRIiLEAST16 = "i";
+    }
+
+
+
+
+    static if(!is(typeof(PRIiLEAST8))) {
+        enum PRIiLEAST8 = "i";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(PRIi32))) {
+        enum PRIi32 = "i";
+    }
+
+
+
+
+    static if(!is(typeof(PRIi16))) {
+        enum PRIi16 = "i";
+    }
+
+
+
+
+    static if(!is(typeof(PRIi8))) {
+        enum PRIi8 = "i";
+    }
+    static if(!is(typeof(PRIdFAST8))) {
+        enum PRIdFAST8 = "d";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(PRIdLEAST32))) {
+        enum PRIdLEAST32 = "d";
+    }
+
+
+
+
+    static if(!is(typeof(PRIdLEAST16))) {
+        enum PRIdLEAST16 = "d";
+    }
+
+
+
+
+    static if(!is(typeof(PRIdLEAST8))) {
+        enum PRIdLEAST8 = "d";
+    }
+
+
+
+
+
+
+    static if(!is(typeof(PRId32))) {
+        enum PRId32 = "d";
+    }
+
+
+
+
+    static if(!is(typeof(PRId16))) {
+        enum PRId16 = "d";
+    }
+
+
+
+
+    static if(!is(typeof(PRId8))) {
+        enum PRId8 = "d";
+    }
+
+
+
+
+    static if(!is(typeof(__PRIPTR_PREFIX))) {
+        enum __PRIPTR_PREFIX = "l";
+    }
+
+
+
+
+    static if(!is(typeof(__PRI64_PREFIX))) {
+        enum __PRI64_PREFIX = "l";
+    }
+
+
+
+
+    static if(!is(typeof(____gwchar_t_defined))) {
+        enum ____gwchar_t_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_INTTYPES_H))) {
+        enum _INTTYPES_H = 1;
+    }
+    static if(!is(typeof(__GLIBC_MINOR__))) {
+        enum __GLIBC_MINOR__ = 29;
+    }
+
+
+
+
+    static if(!is(typeof(__GLIBC__))) {
+        enum __GLIBC__ = 2;
+    }
+
+
+
+
+    static if(!is(typeof(__GNU_LIBRARY__))) {
+        enum __GNU_LIBRARY__ = 6;
+    }
+
+
+
+
+    static if(!is(typeof(__GLIBC_USE_DEPRECATED_SCANF))) {
+        enum __GLIBC_USE_DEPRECATED_SCANF = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__GLIBC_USE_DEPRECATED_GETS))) {
+        enum __GLIBC_USE_DEPRECATED_GETS = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_FORTIFY_LEVEL))) {
+        enum __USE_FORTIFY_LEVEL = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_ATFILE))) {
+        enum __USE_ATFILE = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_MISC))) {
+        enum __USE_MISC = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_ATFILE_SOURCE))) {
+        enum _ATFILE_SOURCE = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_XOPEN2K8))) {
+        enum __USE_XOPEN2K8 = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_ISOC99))) {
+        enum __USE_ISOC99 = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_ISOC95))) {
+        enum __USE_ISOC95 = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_XOPEN2K))) {
+        enum __USE_XOPEN2K = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_POSIX199506))) {
+        enum __USE_POSIX199506 = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_POSIX199309))) {
+        enum __USE_POSIX199309 = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_POSIX2))) {
+        enum __USE_POSIX2 = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_POSIX))) {
+        enum __USE_POSIX = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_C_SOURCE))) {
+        enum _POSIX_C_SOURCE = 200809L;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_SOURCE))) {
+        enum _POSIX_SOURCE = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_POSIX_IMPLICITLY))) {
+        enum __USE_POSIX_IMPLICITLY = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_ISOC11))) {
+        enum __USE_ISOC11 = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_DEFAULT_SOURCE))) {
+        enum _DEFAULT_SOURCE = 1;
+    }
+    static if(!is(typeof(_FEATURES_H))) {
+        enum _FEATURES_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(F_TEST))) {
+        enum F_TEST = 3;
+    }
+
+
+
+
+    static if(!is(typeof(F_TLOCK))) {
+        enum F_TLOCK = 2;
+    }
+
+
+
+
+    static if(!is(typeof(F_LOCK))) {
+        enum F_LOCK = 1;
+    }
+
+
+
+
+    static if(!is(typeof(F_ULOCK))) {
+        enum F_ULOCK = 0;
+    }
+
+
+
+
+    static if(!is(typeof(AT_EACCESS))) {
+        enum AT_EACCESS = 0x200;
+    }
+
+
+
+
+    static if(!is(typeof(AT_SYMLINK_FOLLOW))) {
+        enum AT_SYMLINK_FOLLOW = 0x400;
+    }
+
+
+
+
+    static if(!is(typeof(AT_REMOVEDIR))) {
+        enum AT_REMOVEDIR = 0x200;
+    }
+
+
+
+
+    static if(!is(typeof(AT_SYMLINK_NOFOLLOW))) {
+        enum AT_SYMLINK_NOFOLLOW = 0x100;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SEEK_END))) {
+        enum SEEK_END = 2;
+    }
+
+
+
+
+    static if(!is(typeof(SEEK_CUR))) {
+        enum SEEK_CUR = 1;
+    }
+
+
+
+
+    static if(!is(typeof(SEEK_SET))) {
+        enum SEEK_SET = 0;
+    }
+
+
+
+
+    static if(!is(typeof(F_OK))) {
+        enum F_OK = 0;
+    }
+
+
+
+
+    static if(!is(typeof(X_OK))) {
+        enum X_OK = 1;
+    }
+
+
+
+
+    static if(!is(typeof(W_OK))) {
+        enum W_OK = 2;
+    }
+
+
+
+
+    static if(!is(typeof(R_OK))) {
+        enum R_OK = 4;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_FCNTL_H))) {
+        enum _FCNTL_H = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_ERRNO_H))) {
+        enum _ERRNO_H = 1;
+    }
+    static if(!is(typeof(__PDP_ENDIAN))) {
+        enum __PDP_ENDIAN = 3412;
+    }
+
+
+
+
+    static if(!is(typeof(__BIG_ENDIAN))) {
+        enum __BIG_ENDIAN = 4321;
+    }
+
+
+
+
+    static if(!is(typeof(__LITTLE_ENDIAN))) {
+        enum __LITTLE_ENDIAN = 1234;
+    }
+
+
+
+
+    static if(!is(typeof(_ENDIAN_H))) {
+        enum _ENDIAN_H = 1;
+    }
+    static if(!is(typeof(_DIRENT_H))) {
+        enum _DIRENT_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__SYSCALL_WORDSIZE))) {
+        enum __SYSCALL_WORDSIZE = 64;
+    }
+
+
+
+
+    static if(!is(typeof(__WORDSIZE_TIME64_COMPAT32))) {
+        enum __WORDSIZE_TIME64_COMPAT32 = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__WORDSIZE))) {
+        enum __WORDSIZE = 64;
+    }
+    static if(!is(typeof(_BITS_WCHAR_H))) {
+        enum _BITS_WCHAR_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__WCOREFLAG))) {
+        enum __WCOREFLAG = 0x80;
+    }
+
+
+
+
+    static if(!is(typeof(__W_CONTINUED))) {
+        enum __W_CONTINUED = 0xffff;
+    }
+    static if(!is(typeof(__WCLONE))) {
+        enum __WCLONE = 0x80000000;
+    }
+
+
+
+
+    static if(!is(typeof(__WALL))) {
+        enum __WALL = 0x40000000;
+    }
+
+
+
+
+    static if(!is(typeof(__WNOTHREAD))) {
+        enum __WNOTHREAD = 0x20000000;
+    }
+
+
+
+
+    static if(!is(typeof(WNOWAIT))) {
+        enum WNOWAIT = 0x01000000;
+    }
+
+
+
+
+    static if(!is(typeof(WCONTINUED))) {
+        enum WCONTINUED = 8;
+    }
+    static if(!is(typeof(WEXITED))) {
+        enum WEXITED = 4;
+    }
+
+
+
+
+    static if(!is(typeof(WSTOPPED))) {
+        enum WSTOPPED = 2;
+    }
+
+
+
+
+    static if(!is(typeof(WUNTRACED))) {
+        enum WUNTRACED = 2;
+    }
+
+
+
+
+    static if(!is(typeof(WNOHANG))) {
+        enum WNOHANG = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_UINTN_IDENTITY_H))) {
+        enum _BITS_UINTN_IDENTITY_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__RLIM_T_MATCHES_RLIM64_T))) {
+        enum __RLIM_T_MATCHES_RLIM64_T = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__INO_T_MATCHES_INO64_T))) {
+        enum __INO_T_MATCHES_INO64_T = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__OFF_T_MATCHES_OFF64_T))) {
+        enum __OFF_T_MATCHES_OFF64_T = 1;
+    }
+    static if(!is(typeof(_BITS_TYPESIZES_H))) {
+        enum _BITS_TYPESIZES_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__timer_t_defined))) {
+        enum __timer_t_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__time_t_defined))) {
+        enum __time_t_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__struct_tm_defined))) {
+        enum __struct_tm_defined = 1;
+    }
+    static if(!is(typeof(__timeval_defined))) {
+        enum __timeval_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_STRUCT_TIMESPEC))) {
+        enum _STRUCT_TIMESPEC = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__sigstack_defined))) {
+        enum __sigstack_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_TYPES_STRUCT_SCHED_PARAM))) {
+        enum _BITS_TYPES_STRUCT_SCHED_PARAM = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__osockaddr_defined))) {
+        enum __osockaddr_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__itimerspec_defined))) {
+        enum __itimerspec_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__iovec_defined))) {
+        enum __iovec_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__stack_t_defined))) {
+        enum __stack_t_defined = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(__sigset_t_defined))) {
+        enum __sigset_t_defined = 1;
+    }
+    static if(!is(typeof(__SI_HAVE_SIGSYS))) {
+        enum __SI_HAVE_SIGSYS = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__SI_ERRNO_THEN_CODE))) {
+        enum __SI_ERRNO_THEN_CODE = 1;
+    }
+    static if(!is(typeof(__SI_MAX_SIZE))) {
+        enum __SI_MAX_SIZE = 128;
+    }
+
+
+
+
+    static if(!is(typeof(__siginfo_t_defined))) {
+        enum __siginfo_t_defined = 1;
+    }
+    static if(!is(typeof(__SIGEV_MAX_SIZE))) {
+        enum __SIGEV_MAX_SIZE = 64;
+    }
+
+
+
+
+    static if(!is(typeof(__sigevent_t_defined))) {
+        enum __sigevent_t_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__sig_atomic_t_defined))) {
+        enum __sig_atomic_t_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_TYPES_LOCALE_T_H))) {
+        enum _BITS_TYPES_LOCALE_T_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__clockid_t_defined))) {
+        enum __clockid_t_defined = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__clock_t_defined))) {
+        enum __clock_t_defined = 1;
+    }
+    static if(!is(typeof(_BITS_TYPES___LOCALE_T_H))) {
+        enum _BITS_TYPES___LOCALE_T_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__FILE_defined))) {
+        enum __FILE_defined = 1;
+    }
+    static if(!is(typeof(_BITS_TYPES_H))) {
+        enum _BITS_TYPES_H = 1;
+    }
+    static if(!is(typeof(_BITS_TIME64_H))) {
+        enum _BITS_TIME64_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(TIMER_ABSTIME))) {
+        enum TIMER_ABSTIME = 1;
+    }
+
+
+
+
+    static if(!is(typeof(CLOCK_TAI))) {
+        enum CLOCK_TAI = 11;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(CLOCK_BOOTTIME_ALARM))) {
+        enum CLOCK_BOOTTIME_ALARM = 9;
+    }
+
+
+
+
+    static if(!is(typeof(CLOCK_REALTIME_ALARM))) {
+        enum CLOCK_REALTIME_ALARM = 8;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(CLOCK_BOOTTIME))) {
+        enum CLOCK_BOOTTIME = 7;
+    }
+
+
+
+
+    static if(!is(typeof(CLOCK_MONOTONIC_COARSE))) {
+        enum CLOCK_MONOTONIC_COARSE = 6;
+    }
+
+
+
+
+    static if(!is(typeof(CLOCK_REALTIME_COARSE))) {
+        enum CLOCK_REALTIME_COARSE = 5;
+    }
+
+
+
+
+    static if(!is(typeof(CLOCK_MONOTONIC_RAW))) {
+        enum CLOCK_MONOTONIC_RAW = 4;
+    }
+
+
+
+
+    static if(!is(typeof(CLOCK_THREAD_CPUTIME_ID))) {
+        enum CLOCK_THREAD_CPUTIME_ID = 3;
+    }
+
+
+
+
+    static if(!is(typeof(CLOCK_PROCESS_CPUTIME_ID))) {
+        enum CLOCK_PROCESS_CPUTIME_ID = 2;
+    }
+
+
+
+
+    static if(!is(typeof(CLOCK_MONOTONIC))) {
+        enum CLOCK_MONOTONIC = 1;
+    }
+
+
+
+
+    static if(!is(typeof(CLOCK_REALTIME))) {
+        enum CLOCK_REALTIME = 0;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_BITS_TIME_H))) {
+        enum _BITS_TIME_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__PTHREAD_MUTEX_HAVE_PREV))) {
+        enum __PTHREAD_MUTEX_HAVE_PREV = 1;
+    }
+    static if(!is(typeof(_THREAD_SHARED_TYPES_H))) {
+        enum _THREAD_SHARED_TYPES_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(TCIOFLUSH))) {
+        enum TCIOFLUSH = 2;
+    }
+
+
+
+
+    static if(!is(typeof(TCOFLUSH))) {
+        enum TCOFLUSH = 1;
+    }
+
+
+
+
+    static if(!is(typeof(TCIFLUSH))) {
+        enum TCIFLUSH = 0;
+    }
+
+
+
+
+    static if(!is(typeof(TCION))) {
+        enum TCION = 3;
+    }
+
+
+
+
+    static if(!is(typeof(TCIOFF))) {
+        enum TCIOFF = 2;
+    }
+
+
+
+
+    static if(!is(typeof(TCOON))) {
+        enum TCOON = 1;
+    }
+
+
+
+
+    static if(!is(typeof(TCOOFF))) {
+        enum TCOOFF = 0;
+    }
+
+
+
+
+    static if(!is(typeof(TIOCSER_TEMT))) {
+        enum TIOCSER_TEMT = 0x01;
+    }
+    static if(!is(typeof(B38400))) {
+        enum B38400 = std.conv.octal!17;
+    }
+
+
+
+
+    static if(!is(typeof(B19200))) {
+        enum B19200 = std.conv.octal!16;
+    }
+
+
+
+
+    static if(!is(typeof(B9600))) {
+        enum B9600 = std.conv.octal!15;
+    }
+
+
+
+
+    static if(!is(typeof(B4800))) {
+        enum B4800 = std.conv.octal!14;
+    }
+
+
+
+
+    static if(!is(typeof(B2400))) {
+        enum B2400 = std.conv.octal!13;
+    }
+
+
+
+
+    static if(!is(typeof(B1800))) {
+        enum B1800 = std.conv.octal!12;
+    }
+
+
+
+
+    static if(!is(typeof(B1200))) {
+        enum B1200 = std.conv.octal!11;
+    }
+
+
+
+
+    static if(!is(typeof(B600))) {
+        enum B600 = std.conv.octal!10;
+    }
+
+
+
+
+    static if(!is(typeof(B300))) {
+        enum B300 = std.conv.octal!7;
+    }
+
+
+
+
+    static if(!is(typeof(B200))) {
+        enum B200 = std.conv.octal!6;
+    }
+
+
+
+
+    static if(!is(typeof(B150))) {
+        enum B150 = std.conv.octal!5;
+    }
+
+
+
+
+    static if(!is(typeof(B134))) {
+        enum B134 = std.conv.octal!4;
+    }
+
+
+
+
+    static if(!is(typeof(B110))) {
+        enum B110 = std.conv.octal!3;
+    }
+
+
+
+
+    static if(!is(typeof(B75))) {
+        enum B75 = std.conv.octal!2;
+    }
+
+
+
+
+    static if(!is(typeof(B50))) {
+        enum B50 = std.conv.octal!1;
+    }
+
+
+
+
+    static if(!is(typeof(B0))) {
+        enum B0 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(TCSAFLUSH))) {
+        enum TCSAFLUSH = 2;
+    }
+
+
+
+
+    static if(!is(typeof(TCSADRAIN))) {
+        enum TCSADRAIN = 1;
+    }
+
+
+
+
+    static if(!is(typeof(TCSANOW))) {
+        enum TCSANOW = 0;
+    }
+
+
+
+
+    static if(!is(typeof(_HAVE_STRUCT_TERMIOS_C_OSPEED))) {
+        enum _HAVE_STRUCT_TERMIOS_C_OSPEED = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_HAVE_STRUCT_TERMIOS_C_ISPEED))) {
+        enum _HAVE_STRUCT_TERMIOS_C_ISPEED = 1;
+    }
+
+
+
+
+    static if(!is(typeof(NCCS))) {
+        enum NCCS = 32;
+    }
+
+
+
+
+    static if(!is(typeof(XTABS))) {
+        enum XTABS = std.conv.octal!14000;
+    }
+
+
+
+
+    static if(!is(typeof(VT1))) {
+        enum VT1 = std.conv.octal!40000;
+    }
+
+
+
+
+    static if(!is(typeof(VT0))) {
+        enum VT0 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(VTDLY))) {
+        enum VTDLY = std.conv.octal!40000;
+    }
+
+
+
+
+    static if(!is(typeof(FF1))) {
+        enum FF1 = std.conv.octal!100000;
+    }
+
+
+
+
+    static if(!is(typeof(FF0))) {
+        enum FF0 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(FFDLY))) {
+        enum FFDLY = std.conv.octal!100000;
+    }
+
+
+
+
+    static if(!is(typeof(BS1))) {
+        enum BS1 = std.conv.octal!20000;
+    }
+
+
+
+
+    static if(!is(typeof(BS0))) {
+        enum BS0 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(BSDLY))) {
+        enum BSDLY = std.conv.octal!20000;
+    }
+
+
+
+
+    static if(!is(typeof(TAB3))) {
+        enum TAB3 = std.conv.octal!14000;
+    }
+
+
+
+
+    static if(!is(typeof(TAB2))) {
+        enum TAB2 = std.conv.octal!10000;
+    }
+
+
+
+
+    static if(!is(typeof(TAB1))) {
+        enum TAB1 = std.conv.octal!4000;
+    }
+
+
+
+
+    static if(!is(typeof(TAB0))) {
+        enum TAB0 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(TABDLY))) {
+        enum TABDLY = std.conv.octal!14000;
+    }
+
+
+
+
+    static if(!is(typeof(CR3))) {
+        enum CR3 = std.conv.octal!3000;
+    }
+
+
+
+
+    static if(!is(typeof(CR2))) {
+        enum CR2 = std.conv.octal!2000;
+    }
+
+
+
+
+    static if(!is(typeof(CR1))) {
+        enum CR1 = std.conv.octal!1000;
+    }
+
+
+
+
+    static if(!is(typeof(CR0))) {
+        enum CR0 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(CRDLY))) {
+        enum CRDLY = std.conv.octal!3000;
+    }
+
+
+
+
+    static if(!is(typeof(NL1))) {
+        enum NL1 = std.conv.octal!400;
+    }
+
+
+
+
+    static if(!is(typeof(NL0))) {
+        enum NL0 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(NLDLY))) {
+        enum NLDLY = std.conv.octal!400;
+    }
+
+
+
+
+    static if(!is(typeof(OFDEL))) {
+        enum OFDEL = std.conv.octal!200;
+    }
+
+
+
+
+    static if(!is(typeof(OFILL))) {
+        enum OFILL = std.conv.octal!100;
+    }
+
+
+
+
+    static if(!is(typeof(ONLRET))) {
+        enum ONLRET = std.conv.octal!40;
+    }
+
+
+
+
+    static if(!is(typeof(ONOCR))) {
+        enum ONOCR = std.conv.octal!20;
+    }
+
+
+
+
+    static if(!is(typeof(OCRNL))) {
+        enum OCRNL = std.conv.octal!10;
+    }
+
+
+
+
+    static if(!is(typeof(ONLCR))) {
+        enum ONLCR = std.conv.octal!4;
+    }
+
+
+
+
+    static if(!is(typeof(OLCUC))) {
+        enum OLCUC = std.conv.octal!2;
+    }
+
+
+
+
+    static if(!is(typeof(OPOST))) {
+        enum OPOST = std.conv.octal!1;
+    }
+
+
+
+
+    static if(!is(typeof(EXTPROC))) {
+        enum EXTPROC = std.conv.octal!200000;
+    }
+
+
+
+
+    static if(!is(typeof(IEXTEN))) {
+        enum IEXTEN = std.conv.octal!100000;
+    }
+
+
+
+
+    static if(!is(typeof(PENDIN))) {
+        enum PENDIN = std.conv.octal!40000;
+    }
+
+
+
+
+    static if(!is(typeof(FLUSHO))) {
+        enum FLUSHO = std.conv.octal!10000;
+    }
+
+
+
+
+    static if(!is(typeof(ECHOKE))) {
+        enum ECHOKE = std.conv.octal!4000;
+    }
+
+
+
+
+    static if(!is(typeof(ECHOPRT))) {
+        enum ECHOPRT = std.conv.octal!2000;
+    }
+
+
+
+
+    static if(!is(typeof(ECHOCTL))) {
+        enum ECHOCTL = std.conv.octal!1000;
+    }
+
+
+
+
+    static if(!is(typeof(TOSTOP))) {
+        enum TOSTOP = std.conv.octal!400;
+    }
+
+
+
+
+    static if(!is(typeof(NOFLSH))) {
+        enum NOFLSH = std.conv.octal!200;
+    }
+
+
+
+
+    static if(!is(typeof(ECHONL))) {
+        enum ECHONL = std.conv.octal!100;
+    }
+
+
+
+
+    static if(!is(typeof(ECHOK))) {
+        enum ECHOK = std.conv.octal!40;
+    }
+
+
+
+
+    static if(!is(typeof(ECHOE))) {
+        enum ECHOE = std.conv.octal!20;
+    }
+
+
+
+
+    static if(!is(typeof(ECHO))) {
+        enum ECHO = std.conv.octal!10;
+    }
+
+
+
+
+    static if(!is(typeof(XCASE))) {
+        enum XCASE = std.conv.octal!4;
+    }
+
+
+
+
+    static if(!is(typeof(ICANON))) {
+        enum ICANON = std.conv.octal!2;
+    }
+
+
+
+
+    static if(!is(typeof(ISIG))) {
+        enum ISIG = std.conv.octal!1;
+    }
+
+
+
+
+    static if(!is(typeof(IUTF8))) {
+        enum IUTF8 = std.conv.octal!40000;
+    }
+
+
+
+
+    static if(!is(typeof(IMAXBEL))) {
+        enum IMAXBEL = std.conv.octal!20000;
+    }
+
+
+
+
+    static if(!is(typeof(IXOFF))) {
+        enum IXOFF = std.conv.octal!10000;
+    }
+
+
+
+
+    static if(!is(typeof(IXANY))) {
+        enum IXANY = std.conv.octal!4000;
+    }
+
+
+
+
+    static if(!is(typeof(IXON))) {
+        enum IXON = std.conv.octal!2000;
+    }
+
+
+
+
+    static if(!is(typeof(IUCLC))) {
+        enum IUCLC = std.conv.octal!1000;
+    }
+
+
+
+
+    static if(!is(typeof(ICRNL))) {
+        enum ICRNL = std.conv.octal!400;
+    }
+
+
+
+
+    static if(!is(typeof(IGNCR))) {
+        enum IGNCR = std.conv.octal!200;
+    }
+
+
+
+
+    static if(!is(typeof(INLCR))) {
+        enum INLCR = std.conv.octal!100;
+    }
+
+
+
+
+    static if(!is(typeof(ISTRIP))) {
+        enum ISTRIP = std.conv.octal!40;
+    }
+
+
+
+
+    static if(!is(typeof(INPCK))) {
+        enum INPCK = std.conv.octal!20;
+    }
+
+
+
+
+    static if(!is(typeof(PARMRK))) {
+        enum PARMRK = std.conv.octal!10;
+    }
+
+
+
+
+    static if(!is(typeof(IGNPAR))) {
+        enum IGNPAR = std.conv.octal!4;
+    }
+
+
+
+
+    static if(!is(typeof(BRKINT))) {
+        enum BRKINT = std.conv.octal!2;
+    }
+
+
+
+
+    static if(!is(typeof(IGNBRK))) {
+        enum IGNBRK = std.conv.octal!1;
+    }
+
+
+
+
+    static if(!is(typeof(CLOCAL))) {
+        enum CLOCAL = std.conv.octal!4000;
+    }
+
+
+
+
+    static if(!is(typeof(HUPCL))) {
+        enum HUPCL = std.conv.octal!2000;
+    }
+
+
+
+
+    static if(!is(typeof(PARODD))) {
+        enum PARODD = std.conv.octal!1000;
+    }
+
+
+
+
+    static if(!is(typeof(PARENB))) {
+        enum PARENB = std.conv.octal!400;
+    }
+
+
+
+
+    static if(!is(typeof(CREAD))) {
+        enum CREAD = std.conv.octal!200;
+    }
+
+
+
+
+    static if(!is(typeof(CSTOPB))) {
+        enum CSTOPB = std.conv.octal!100;
+    }
+
+
+
+
+    static if(!is(typeof(CS8))) {
+        enum CS8 = std.conv.octal!60;
+    }
+
+
+
+
+    static if(!is(typeof(CS7))) {
+        enum CS7 = std.conv.octal!40;
+    }
+
+
+
+
+    static if(!is(typeof(CS6))) {
+        enum CS6 = std.conv.octal!20;
+    }
+
+
+
+
+    static if(!is(typeof(CS5))) {
+        enum CS5 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(CSIZE))) {
+        enum CSIZE = std.conv.octal!60;
+    }
+
+
+
+
+    static if(!is(typeof(VEOL2))) {
+        enum VEOL2 = 16;
+    }
+
+
+
+
+    static if(!is(typeof(VLNEXT))) {
+        enum VLNEXT = 15;
+    }
+
+
+
+
+    static if(!is(typeof(VWERASE))) {
+        enum VWERASE = 14;
+    }
+
+
+
+
+    static if(!is(typeof(VDISCARD))) {
+        enum VDISCARD = 13;
+    }
+
+
+
+
+    static if(!is(typeof(VREPRINT))) {
+        enum VREPRINT = 12;
+    }
+
+
+
+
+    static if(!is(typeof(VEOL))) {
+        enum VEOL = 11;
+    }
+
+
+
+
+    static if(!is(typeof(VSUSP))) {
+        enum VSUSP = 10;
+    }
+
+
+
+
+    static if(!is(typeof(VSTOP))) {
+        enum VSTOP = 9;
+    }
+
+
+
+
+    static if(!is(typeof(VSTART))) {
+        enum VSTART = 8;
+    }
+
+
+
+
+    static if(!is(typeof(VSWTC))) {
+        enum VSWTC = 7;
+    }
+
+
+
+
+    static if(!is(typeof(VMIN))) {
+        enum VMIN = 6;
+    }
+
+
+
+
+    static if(!is(typeof(VTIME))) {
+        enum VTIME = 5;
+    }
+
+
+
+
+    static if(!is(typeof(VEOF))) {
+        enum VEOF = 4;
+    }
+
+
+
+
+    static if(!is(typeof(VKILL))) {
+        enum VKILL = 3;
+    }
+
+
+
+
+    static if(!is(typeof(VERASE))) {
+        enum VERASE = 2;
+    }
+
+
+
+
+    static if(!is(typeof(VQUIT))) {
+        enum VQUIT = 1;
+    }
+
+
+
+
+    static if(!is(typeof(VINTR))) {
+        enum VINTR = 0;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(B4000000))) {
+        enum B4000000 = std.conv.octal!10017;
+    }
+
+
+
+
+    static if(!is(typeof(B3500000))) {
+        enum B3500000 = std.conv.octal!10016;
+    }
+
+
+
+
+    static if(!is(typeof(B3000000))) {
+        enum B3000000 = std.conv.octal!10015;
+    }
+
+
+
+
+    static if(!is(typeof(B2500000))) {
+        enum B2500000 = std.conv.octal!10014;
+    }
+
+
+
+
+    static if(!is(typeof(B2000000))) {
+        enum B2000000 = std.conv.octal!10013;
+    }
+
+
+
+
+    static if(!is(typeof(B1500000))) {
+        enum B1500000 = std.conv.octal!10012;
+    }
+
+
+
+
+    static if(!is(typeof(B1152000))) {
+        enum B1152000 = std.conv.octal!10011;
+    }
+
+
+
+
+    static if(!is(typeof(B1000000))) {
+        enum B1000000 = std.conv.octal!10010;
+    }
+
+
+
+
+    static if(!is(typeof(B921600))) {
+        enum B921600 = std.conv.octal!10007;
+    }
+
+
+
+
+    static if(!is(typeof(B576000))) {
+        enum B576000 = std.conv.octal!10006;
+    }
+
+
+
+
+    static if(!is(typeof(B500000))) {
+        enum B500000 = std.conv.octal!10005;
+    }
+
+
+
+
+    static if(!is(typeof(B460800))) {
+        enum B460800 = std.conv.octal!10004;
+    }
+
+
+
+
+    static if(!is(typeof(B230400))) {
+        enum B230400 = std.conv.octal!10003;
+    }
+
+
+
+
+    static if(!is(typeof(B115200))) {
+        enum B115200 = std.conv.octal!10002;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(B57600))) {
+        enum B57600 = std.conv.octal!10001;
+    }
+
+
+
+
+    static if(!is(typeof(CRTSCTS))) {
+        enum CRTSCTS = std.conv.octal!20000000000;
+    }
+
+
+
+
+    static if(!is(typeof(CMSPAR))) {
+        enum CMSPAR = std.conv.octal!10000000000;
+    }
+
+
+
+
+    static if(!is(typeof(CIBAUD))) {
+        enum CIBAUD = std.conv.octal!2003600000;
+    }
+
+
+
+
+    static if(!is(typeof(CBAUDEX))) {
+        enum CBAUDEX = std.conv.octal!10000;
+    }
+
+
+
+
+    static if(!is(typeof(CBAUD))) {
+        enum CBAUD = std.conv.octal!10017;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_STDINT_UINTN_H))) {
+        enum _BITS_STDINT_UINTN_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_STDINT_INTN_H))) {
+        enum _BITS_STDINT_INTN_H = 1;
+    }
+    static if(!is(typeof(__S_IEXEC))) {
+        enum __S_IEXEC = std.conv.octal!100;
+    }
+
+
+
+
+    static if(!is(typeof(__S_IWRITE))) {
+        enum __S_IWRITE = std.conv.octal!200;
+    }
+
+
+
+
+    static if(!is(typeof(__S_IREAD))) {
+        enum __S_IREAD = std.conv.octal!400;
+    }
+
+
+
+
+    static if(!is(typeof(__S_ISVTX))) {
+        enum __S_ISVTX = std.conv.octal!1000;
+    }
+
+
+
+
+    static if(!is(typeof(__S_ISGID))) {
+        enum __S_ISGID = std.conv.octal!2000;
+    }
+
+
+
+
+    static if(!is(typeof(__S_ISUID))) {
+        enum __S_ISUID = std.conv.octal!4000;
+    }
+    static if(!is(typeof(__S_IFSOCK))) {
+        enum __S_IFSOCK = std.conv.octal!140000;
+    }
+
+
+
+
+    static if(!is(typeof(__S_IFLNK))) {
+        enum __S_IFLNK = std.conv.octal!120000;
+    }
+
+
+
+
+    static if(!is(typeof(__S_IFIFO))) {
+        enum __S_IFIFO = std.conv.octal!10000;
+    }
+
+
+
+
+    static if(!is(typeof(__S_IFREG))) {
+        enum __S_IFREG = std.conv.octal!100000;
+    }
+
+
+
+
+    static if(!is(typeof(__S_IFBLK))) {
+        enum __S_IFBLK = std.conv.octal!60000;
+    }
+
+
+
+
+    static if(!is(typeof(__S_IFCHR))) {
+        enum __S_IFCHR = std.conv.octal!20000;
+    }
+
+
+
+
+    static if(!is(typeof(__S_IFDIR))) {
+        enum __S_IFDIR = std.conv.octal!40000;
+    }
+
+
+
+
+    static if(!is(typeof(__S_IFMT))) {
+        enum __S_IFMT = std.conv.octal!170000;
+    }
+    static if(!is(typeof(_MKNOD_VER_LINUX))) {
+        enum _MKNOD_VER_LINUX = 0;
+    }
+
+
+
+
+    static if(!is(typeof(_STAT_VER_LINUX))) {
+        enum _STAT_VER_LINUX = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_STAT_VER_KERNEL))) {
+        enum _STAT_VER_KERNEL = 0;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_STAT_H))) {
+        enum _BITS_STAT_H = 1;
+    }
+    static if(!is(typeof(_BITS_SS_FLAGS_H))) {
+        enum _BITS_SS_FLAGS_H = 1;
+    }
+    static if(!is(typeof(SOMAXCONN))) {
+        enum SOMAXCONN = 128;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_XDP))) {
+        enum SOL_XDP = 283;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_TLS))) {
+        enum SOL_TLS = 282;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_KCM))) {
+        enum SOL_KCM = 281;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_NFC))) {
+        enum SOL_NFC = 280;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_ALG))) {
+        enum SOL_ALG = 279;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_CAIF))) {
+        enum SOL_CAIF = 278;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_IUCV))) {
+        enum SOL_IUCV = 277;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_RDS))) {
+        enum SOL_RDS = 276;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_PNPIPE))) {
+        enum SOL_PNPIPE = 275;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_BLUETOOTH))) {
+        enum SOL_BLUETOOTH = 274;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_PPPOL2TP))) {
+        enum SOL_PPPOL2TP = 273;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_RXRPC))) {
+        enum SOL_RXRPC = 272;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_TIPC))) {
+        enum SOL_TIPC = 271;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_NETLINK))) {
+        enum SOL_NETLINK = 270;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_DCCP))) {
+        enum SOL_DCCP = 269;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_LLC))) {
+        enum SOL_LLC = 268;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_NETBEUI))) {
+        enum SOL_NETBEUI = 267;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_IRDA))) {
+        enum SOL_IRDA = 266;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_AAL))) {
+        enum SOL_AAL = 265;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_ATM))) {
+        enum SOL_ATM = 264;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_PACKET))) {
+        enum SOL_PACKET = 263;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_X25))) {
+        enum SOL_X25 = 262;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_DECNET))) {
+        enum SOL_DECNET = 261;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_RAW))) {
+        enum SOL_RAW = 255;
+    }
+    static if(!is(typeof(PF_MAX))) {
+        enum PF_MAX = 45;
+    }
+
+
+
+
+    static if(!is(typeof(PF_XDP))) {
+        enum PF_XDP = 44;
+    }
+
+
+
+
+    static if(!is(typeof(PF_SMC))) {
+        enum PF_SMC = 43;
+    }
+
+
+
+
+    static if(!is(typeof(PF_QIPCRTR))) {
+        enum PF_QIPCRTR = 42;
+    }
+
+
+
+
+    static if(!is(typeof(PF_KCM))) {
+        enum PF_KCM = 41;
+    }
+
+
+
+
+    static if(!is(typeof(PF_VSOCK))) {
+        enum PF_VSOCK = 40;
+    }
+
+
+
+
+    static if(!is(typeof(PF_NFC))) {
+        enum PF_NFC = 39;
+    }
+
+
+
+
+    static if(!is(typeof(PF_ALG))) {
+        enum PF_ALG = 38;
+    }
+
+
+
+
+    static if(!is(typeof(PF_CAIF))) {
+        enum PF_CAIF = 37;
+    }
+
+
+
+
+    static if(!is(typeof(PF_IEEE802154))) {
+        enum PF_IEEE802154 = 36;
+    }
+
+
+
+
+    static if(!is(typeof(PF_PHONET))) {
+        enum PF_PHONET = 35;
+    }
+
+
+
+
+    static if(!is(typeof(PF_ISDN))) {
+        enum PF_ISDN = 34;
+    }
+
+
+
+
+    static if(!is(typeof(PF_RXRPC))) {
+        enum PF_RXRPC = 33;
+    }
+
+
+
+
+    static if(!is(typeof(PF_IUCV))) {
+        enum PF_IUCV = 32;
+    }
+
+
+
+
+    static if(!is(typeof(PF_BLUETOOTH))) {
+        enum PF_BLUETOOTH = 31;
+    }
+
+
+
+
+    static if(!is(typeof(PF_TIPC))) {
+        enum PF_TIPC = 30;
+    }
+
+
+
+
+    static if(!is(typeof(PF_CAN))) {
+        enum PF_CAN = 29;
+    }
+
+
+
+
+    static if(!is(typeof(PF_MPLS))) {
+        enum PF_MPLS = 28;
+    }
+
+
+
+
+    static if(!is(typeof(PF_IB))) {
+        enum PF_IB = 27;
+    }
+
+
+
+
+    static if(!is(typeof(PF_LLC))) {
+        enum PF_LLC = 26;
+    }
+
+
+
+
+    static if(!is(typeof(PF_WANPIPE))) {
+        enum PF_WANPIPE = 25;
+    }
+
+
+
+
+    static if(!is(typeof(PF_PPPOX))) {
+        enum PF_PPPOX = 24;
+    }
+
+
+
+
+    static if(!is(typeof(PF_IRDA))) {
+        enum PF_IRDA = 23;
+    }
+
+
+
+
+    static if(!is(typeof(PF_SNA))) {
+        enum PF_SNA = 22;
+    }
+
+
+
+
+    static if(!is(typeof(PF_RDS))) {
+        enum PF_RDS = 21;
+    }
+
+
+
+
+    static if(!is(typeof(PF_ATMSVC))) {
+        enum PF_ATMSVC = 20;
+    }
+
+
+
+
+    static if(!is(typeof(PF_ECONET))) {
+        enum PF_ECONET = 19;
+    }
+
+
+
+
+    static if(!is(typeof(PF_ASH))) {
+        enum PF_ASH = 18;
+    }
+
+
+
+
+    static if(!is(typeof(PF_PACKET))) {
+        enum PF_PACKET = 17;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(PF_NETLINK))) {
+        enum PF_NETLINK = 16;
+    }
+
+
+
+
+    static if(!is(typeof(PF_KEY))) {
+        enum PF_KEY = 15;
+    }
+
+
+
+
+    static if(!is(typeof(PF_SECURITY))) {
+        enum PF_SECURITY = 14;
+    }
+
+
+
+
+    static if(!is(typeof(PF_NETBEUI))) {
+        enum PF_NETBEUI = 13;
+    }
+
+
+
+
+    static if(!is(typeof(PF_DECnet))) {
+        enum PF_DECnet = 12;
+    }
+
+
+
+
+    static if(!is(typeof(PF_ROSE))) {
+        enum PF_ROSE = 11;
+    }
+
+
+
+
+    static if(!is(typeof(PF_INET6))) {
+        enum PF_INET6 = 10;
+    }
+
+
+
+
+    static if(!is(typeof(PF_X25))) {
+        enum PF_X25 = 9;
+    }
+
+
+
+
+    static if(!is(typeof(PF_ATMPVC))) {
+        enum PF_ATMPVC = 8;
+    }
+
+
+
+
+    static if(!is(typeof(PF_BRIDGE))) {
+        enum PF_BRIDGE = 7;
+    }
+
+
+
+
+    static if(!is(typeof(PF_NETROM))) {
+        enum PF_NETROM = 6;
+    }
+
+
+
+
+    static if(!is(typeof(PF_APPLETALK))) {
+        enum PF_APPLETALK = 5;
+    }
+
+
+
+
+    static if(!is(typeof(PF_IPX))) {
+        enum PF_IPX = 4;
+    }
+
+
+
+
+    static if(!is(typeof(PF_AX25))) {
+        enum PF_AX25 = 3;
+    }
+
+
+
+
+    static if(!is(typeof(PF_INET))) {
+        enum PF_INET = 2;
+    }
+    static if(!is(typeof(PF_LOCAL))) {
+        enum PF_LOCAL = 1;
+    }
+
+
+
+
+    static if(!is(typeof(PF_UNSPEC))) {
+        enum PF_UNSPEC = 0;
+    }
+    static if(!is(typeof(_SS_SIZE))) {
+        enum _SS_SIZE = 128;
+    }
+    static if(!is(typeof(_BITS_SOCKADDR_H))) {
+        enum _BITS_SOCKADDR_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_SIGTHREAD_H))) {
+        enum _BITS_SIGTHREAD_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(SIGSTKSZ))) {
+        enum SIGSTKSZ = 8192;
+    }
+
+
+
+
+    static if(!is(typeof(MINSIGSTKSZ))) {
+        enum MINSIGSTKSZ = 2048;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_SIGSTACK_H))) {
+        enum _BITS_SIGSTACK_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__SIGRTMAX))) {
+        enum __SIGRTMAX = 64;
+    }
+
+
+
+
+    static if(!is(typeof(SIGSYS))) {
+        enum SIGSYS = 31;
+    }
+
+
+
+
+    static if(!is(typeof(SIGPOLL))) {
+        enum SIGPOLL = 29;
+    }
+
+
+
+
+    static if(!is(typeof(SIGURG))) {
+        enum SIGURG = 23;
+    }
+
+
+
+
+    static if(!is(typeof(SIGTSTP))) {
+        enum SIGTSTP = 20;
+    }
+
+
+
+
+    static if(!is(typeof(SIGSTOP))) {
+        enum SIGSTOP = 19;
+    }
+
+
+
+
+    static if(!is(typeof(SIGCONT))) {
+        enum SIGCONT = 18;
+    }
+
+
+
+
+    static if(!is(typeof(SIGCHLD))) {
+        enum SIGCHLD = 17;
+    }
+
+
+
+
+    static if(!is(typeof(SIGUSR2))) {
+        enum SIGUSR2 = 12;
+    }
+
+
+
+
+    static if(!is(typeof(SIGUSR1))) {
+        enum SIGUSR1 = 10;
+    }
+
+
+
+
+    static if(!is(typeof(SIGBUS))) {
+        enum SIGBUS = 7;
+    }
+
+
+
+
+    static if(!is(typeof(SIGPWR))) {
+        enum SIGPWR = 30;
+    }
+
+
+
+
+    static if(!is(typeof(SIGSTKFLT))) {
+        enum SIGSTKFLT = 16;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_SIGNUM_H))) {
+        enum _BITS_SIGNUM_H = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(__SIGRTMIN))) {
+        enum __SIGRTMIN = 32;
+    }
+    static if(!is(typeof(SIGWINCH))) {
+        enum SIGWINCH = 28;
+    }
+
+
+
+
+    static if(!is(typeof(SIGPROF))) {
+        enum SIGPROF = 27;
+    }
+
+
+
+
+    static if(!is(typeof(SIGVTALRM))) {
+        enum SIGVTALRM = 26;
+    }
+
+
+
+
+    static if(!is(typeof(SIGXFSZ))) {
+        enum SIGXFSZ = 25;
+    }
+
+
+
+
+    static if(!is(typeof(SIGXCPU))) {
+        enum SIGXCPU = 24;
+    }
+
+
+
+
+    static if(!is(typeof(SIGTTOU))) {
+        enum SIGTTOU = 22;
+    }
+
+
+
+
+    static if(!is(typeof(SIGTTIN))) {
+        enum SIGTTIN = 21;
+    }
+
+
+
+
+    static if(!is(typeof(SIGALRM))) {
+        enum SIGALRM = 14;
+    }
+
+
+
+
+    static if(!is(typeof(SIGPIPE))) {
+        enum SIGPIPE = 13;
+    }
+
+
+
+
+    static if(!is(typeof(SIGKILL))) {
+        enum SIGKILL = 9;
+    }
+    static if(!is(typeof(SIGTRAP))) {
+        enum SIGTRAP = 5;
+    }
+
+
+
+
+    static if(!is(typeof(SIGQUIT))) {
+        enum SIGQUIT = 3;
+    }
+    static if(!is(typeof(SIGHUP))) {
+        enum SIGHUP = 1;
+    }
+
+
+
+
+    static if(!is(typeof(SIGTERM))) {
+        enum SIGTERM = 15;
+    }
+
+
+
+
+    static if(!is(typeof(SIGSEGV))) {
+        enum SIGSEGV = 11;
+    }
+
+
+
+
+    static if(!is(typeof(SIGFPE))) {
+        enum SIGFPE = 8;
+    }
+
+
+
+
+    static if(!is(typeof(SIGABRT))) {
+        enum SIGABRT = 6;
+    }
+
+
+
+
+    static if(!is(typeof(SIGILL))) {
+        enum SIGILL = 4;
+    }
+
+
+
+
+    static if(!is(typeof(SIGINT))) {
+        enum SIGINT = 2;
+    }
+    static if(!is(typeof(_BITS_SIGNUM_GENERIC_H))) {
+        enum _BITS_SIGNUM_GENERIC_H = 1;
+    }
+    static if(!is(typeof(__SI_ASYNCIO_AFTER_SIGIO))) {
+        enum __SI_ASYNCIO_AFTER_SIGIO = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_SIGINFO_CONSTS_H))) {
+        enum _BITS_SIGINFO_CONSTS_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_SIGINFO_ARCH_H))) {
+        enum _BITS_SIGINFO_ARCH_H = 1;
+    }
+    static if(!is(typeof(_BITS_SIGEVENT_CONSTS_H))) {
+        enum _BITS_SIGEVENT_CONSTS_H = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(FP_XSTATE_MAGIC2))) {
+        enum FP_XSTATE_MAGIC2 = 0x46505845U;
+    }
+
+
+
+
+    static if(!is(typeof(FP_XSTATE_MAGIC1))) {
+        enum FP_XSTATE_MAGIC1 = 0x46505853U;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_SIGCONTEXT_H))) {
+        enum _BITS_SIGCONTEXT_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(SIG_SETMASK))) {
+        enum SIG_SETMASK = 2;
+    }
+
+
+
+
+    static if(!is(typeof(SIG_UNBLOCK))) {
+        enum SIG_UNBLOCK = 1;
+    }
+
+
+
+
+    static if(!is(typeof(SIG_BLOCK))) {
+        enum SIG_BLOCK = 0;
+    }
+    static if(!is(typeof(SA_INTERRUPT))) {
+        enum SA_INTERRUPT = 0x20000000;
+    }
+
+
+
+
+    static if(!is(typeof(SA_RESETHAND))) {
+        enum SA_RESETHAND = 0x80000000;
+    }
+
+
+
+
+    static if(!is(typeof(SA_NODEFER))) {
+        enum SA_NODEFER = 0x40000000;
+    }
+
+
+
+
+    static if(!is(typeof(SA_RESTART))) {
+        enum SA_RESTART = 0x10000000;
+    }
+
+
+
+
+    static if(!is(typeof(SA_ONSTACK))) {
+        enum SA_ONSTACK = 0x08000000;
+    }
+
+
+
+
+    static if(!is(typeof(SA_SIGINFO))) {
+        enum SA_SIGINFO = 4;
+    }
+
+
+
+
+    static if(!is(typeof(SA_NOCLDWAIT))) {
+        enum SA_NOCLDWAIT = 2;
+    }
+
+
+
+
+    static if(!is(typeof(SA_NOCLDSTOP))) {
+        enum SA_NOCLDSTOP = 1;
+    }
+    static if(!is(typeof(_BITS_SIGACTION_H))) {
+        enum _BITS_SIGACTION_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_SETJMP_H))) {
+        enum _BITS_SETJMP_H = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(__SIZEOF_SEM_T))) {
+        enum __SIZEOF_SEM_T = 32;
+    }
+    static if(!is(typeof(__FD_ZERO_STOS))) {
+        enum __FD_ZERO_STOS = "stosq";
+    }
+
+
+
+
+    static if(!is(typeof(SCHED_RR))) {
+        enum SCHED_RR = 2;
+    }
+
+
+
+
+    static if(!is(typeof(SCHED_FIFO))) {
+        enum SCHED_FIFO = 1;
+    }
+
+
+
+
+    static if(!is(typeof(SCHED_OTHER))) {
+        enum SCHED_OTHER = 0;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_SCHED_H))) {
+        enum _BITS_SCHED_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__have_pthread_attr_t))) {
+        enum __have_pthread_attr_t = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_PTHREADTYPES_COMMON_H))) {
+        enum _BITS_PTHREADTYPES_COMMON_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__PTHREAD_RWLOCK_INT_FLAGS_SHARED))) {
+        enum __PTHREAD_RWLOCK_INT_FLAGS_SHARED = 1;
+    }
+    static if(!is(typeof(__PTHREAD_MUTEX_USE_UNION))) {
+        enum __PTHREAD_MUTEX_USE_UNION = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__PTHREAD_MUTEX_NUSERS_AFTER_KIND))) {
+        enum __PTHREAD_MUTEX_NUSERS_AFTER_KIND = 0;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(__PTHREAD_MUTEX_LOCK_ELISION))) {
+        enum __PTHREAD_MUTEX_LOCK_ELISION = 1;
+    }
+    static if(!is(typeof(__SIZEOF_PTHREAD_BARRIERATTR_T))) {
+        enum __SIZEOF_PTHREAD_BARRIERATTR_T = 4;
+    }
+
+
+
+
+    static if(!is(typeof(__SIZEOF_PTHREAD_RWLOCKATTR_T))) {
+        enum __SIZEOF_PTHREAD_RWLOCKATTR_T = 8;
+    }
+
+
+
+
+    static if(!is(typeof(__SIZEOF_PTHREAD_CONDATTR_T))) {
+        enum __SIZEOF_PTHREAD_CONDATTR_T = 4;
+    }
+
+
+
+
+    static if(!is(typeof(__SIZEOF_PTHREAD_COND_T))) {
+        enum __SIZEOF_PTHREAD_COND_T = 48;
+    }
+
+
+
+
+    static if(!is(typeof(__SIZEOF_PTHREAD_MUTEXATTR_T))) {
+        enum __SIZEOF_PTHREAD_MUTEXATTR_T = 4;
+    }
+
+
+
+
+    static if(!is(typeof(__SIZEOF_PTHREAD_BARRIER_T))) {
+        enum __SIZEOF_PTHREAD_BARRIER_T = 32;
+    }
+
+
+
+
+    static if(!is(typeof(__SIZEOF_PTHREAD_RWLOCK_T))) {
+        enum __SIZEOF_PTHREAD_RWLOCK_T = 56;
+    }
+    static if(!is(typeof(__SIZEOF_PTHREAD_MUTEX_T))) {
+        enum __SIZEOF_PTHREAD_MUTEX_T = 40;
+    }
+
+
+
+
+    static if(!is(typeof(__SIZEOF_PTHREAD_ATTR_T))) {
+        enum __SIZEOF_PTHREAD_ATTR_T = 56;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_PTHREADTYPES_ARCH_H))) {
+        enum _BITS_PTHREADTYPES_ARCH_H = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_POSIX_CLOCKRES_MIN))) {
+        enum _POSIX_CLOCKRES_MIN = 20000000;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_TZNAME_MAX))) {
+        enum _POSIX_TZNAME_MAX = 6;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_TTY_NAME_MAX))) {
+        enum _POSIX_TTY_NAME_MAX = 9;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_TIMER_MAX))) {
+        enum _POSIX_TIMER_MAX = 32;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_SYMLOOP_MAX))) {
+        enum _POSIX_SYMLOOP_MAX = 8;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_SYMLINK_MAX))) {
+        enum _POSIX_SYMLINK_MAX = 255;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_STREAM_MAX))) {
+        enum _POSIX_STREAM_MAX = 8;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_SSIZE_MAX))) {
+        enum _POSIX_SSIZE_MAX = 32767;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_SIGQUEUE_MAX))) {
+        enum _POSIX_SIGQUEUE_MAX = 32;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_SEM_VALUE_MAX))) {
+        enum _POSIX_SEM_VALUE_MAX = 32767;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_SEM_NSEMS_MAX))) {
+        enum _POSIX_SEM_NSEMS_MAX = 256;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_RTSIG_MAX))) {
+        enum _POSIX_RTSIG_MAX = 8;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_RE_DUP_MAX))) {
+        enum _POSIX_RE_DUP_MAX = 255;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_POSIX_PIPE_BUF))) {
+        enum _POSIX_PIPE_BUF = 512;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_PATH_MAX))) {
+        enum _POSIX_PATH_MAX = 256;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_OPEN_MAX))) {
+        enum _POSIX_OPEN_MAX = 20;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_NGROUPS_MAX))) {
+        enum _POSIX_NGROUPS_MAX = 8;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_NAME_MAX))) {
+        enum _POSIX_NAME_MAX = 14;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_MQ_PRIO_MAX))) {
+        enum _POSIX_MQ_PRIO_MAX = 32;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_MQ_OPEN_MAX))) {
+        enum _POSIX_MQ_OPEN_MAX = 8;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_MAX_INPUT))) {
+        enum _POSIX_MAX_INPUT = 255;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_MAX_CANON))) {
+        enum _POSIX_MAX_CANON = 255;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_LOGIN_NAME_MAX))) {
+        enum _POSIX_LOGIN_NAME_MAX = 9;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_LINK_MAX))) {
+        enum _POSIX_LINK_MAX = 8;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_HOST_NAME_MAX))) {
+        enum _POSIX_HOST_NAME_MAX = 255;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_DELAYTIMER_MAX))) {
+        enum _POSIX_DELAYTIMER_MAX = 32;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_CHILD_MAX))) {
+        enum _POSIX_CHILD_MAX = 25;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_ARG_MAX))) {
+        enum _POSIX_ARG_MAX = 4096;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_AIO_MAX))) {
+        enum _POSIX_AIO_MAX = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_AIO_LISTIO_MAX))) {
+        enum _POSIX_AIO_LISTIO_MAX = 2;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_POSIX1_LIM_H))) {
+        enum _BITS_POSIX1_LIM_H = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(MQ_PRIO_MAX))) {
+        enum MQ_PRIO_MAX = 32768;
+    }
+
+
+
+
+    static if(!is(typeof(HOST_NAME_MAX))) {
+        enum HOST_NAME_MAX = 64;
+    }
+
+
+
+
+    static if(!is(typeof(LOGIN_NAME_MAX))) {
+        enum LOGIN_NAME_MAX = 256;
+    }
+
+
+
+
+    static if(!is(typeof(TTY_NAME_MAX))) {
+        enum TTY_NAME_MAX = 32;
+    }
+
+
+
+
+    static if(!is(typeof(DELAYTIMER_MAX))) {
+        enum DELAYTIMER_MAX = 2147483647;
+    }
+
+
+
+
+    static if(!is(typeof(PTHREAD_STACK_MIN))) {
+        enum PTHREAD_STACK_MIN = 16384;
+    }
+
+
+
+
+    static if(!is(typeof(AIO_PRIO_DELTA_MAX))) {
+        enum AIO_PRIO_DELTA_MAX = 20;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_THREAD_THREADS_MAX))) {
+        enum _POSIX_THREAD_THREADS_MAX = 64;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_POSIX_THREAD_DESTRUCTOR_ITERATIONS))) {
+        enum _POSIX_THREAD_DESTRUCTOR_ITERATIONS = 4;
+    }
+
+
+
+
+    static if(!is(typeof(PTHREAD_KEYS_MAX))) {
+        enum PTHREAD_KEYS_MAX = 1024;
+    }
+
+
+
+
+    static if(!is(typeof(_POSIX_THREAD_KEYS_MAX))) {
+        enum _POSIX_THREAD_KEYS_MAX = 128;
+    }
+    static if(!is(typeof(_BITS_LIBM_SIMD_DECL_STUBS_H))) {
+        enum _BITS_LIBM_SIMD_DECL_STUBS_H = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__GLIBC_USE_IEC_60559_TYPES_EXT))) {
+        enum __GLIBC_USE_IEC_60559_TYPES_EXT = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__GLIBC_USE_IEC_60559_FUNCS_EXT))) {
+        enum __GLIBC_USE_IEC_60559_FUNCS_EXT = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__GLIBC_USE_IEC_60559_BFP_EXT))) {
+        enum __GLIBC_USE_IEC_60559_BFP_EXT = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__GLIBC_USE_LIB_EXT2))) {
+        enum __GLIBC_USE_LIB_EXT2 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RTHDR_TYPE_0))) {
+        enum IPV6_RTHDR_TYPE_0 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RTHDR_STRICT))) {
+        enum IPV6_RTHDR_STRICT = 1;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RTHDR_LOOSE))) {
+        enum IPV6_RTHDR_LOOSE = 0;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_ICMPV6))) {
+        enum SOL_ICMPV6 = 58;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_IPV6))) {
+        enum SOL_IPV6 = 41;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_PMTUDISC_OMIT))) {
+        enum IPV6_PMTUDISC_OMIT = 5;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_PMTUDISC_INTERFACE))) {
+        enum IPV6_PMTUDISC_INTERFACE = 4;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_PMTUDISC_PROBE))) {
+        enum IPV6_PMTUDISC_PROBE = 3;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_PMTUDISC_DO))) {
+        enum IPV6_PMTUDISC_DO = 2;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_PMTUDISC_WANT))) {
+        enum IPV6_PMTUDISC_WANT = 1;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_PMTUDISC_DONT))) {
+        enum IPV6_PMTUDISC_DONT = 0;
+    }
+    static if(!is(typeof(IPV6_FREEBIND))) {
+        enum IPV6_FREEBIND = 78;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RECVFRAGSIZE))) {
+        enum IPV6_RECVFRAGSIZE = 77;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_UNICAST_IF))) {
+        enum IPV6_UNICAST_IF = 76;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_TRANSPARENT))) {
+        enum IPV6_TRANSPARENT = 75;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IPV6_ORIGDSTADDR))) {
+        enum IPV6_ORIGDSTADDR = 74;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_MINHOPCOUNT))) {
+        enum IPV6_MINHOPCOUNT = 73;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_ADDR_PREFERENCES))) {
+        enum IPV6_ADDR_PREFERENCES = 72;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_AUTOFLOWLABEL))) {
+        enum IPV6_AUTOFLOWLABEL = 70;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_TCLASS))) {
+        enum IPV6_TCLASS = 67;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RECVTCLASS))) {
+        enum IPV6_RECVTCLASS = 66;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_DONTFRAG))) {
+        enum IPV6_DONTFRAG = 62;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_PATHMTU))) {
+        enum IPV6_PATHMTU = 61;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RECVPATHMTU))) {
+        enum IPV6_RECVPATHMTU = 60;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_DSTOPTS))) {
+        enum IPV6_DSTOPTS = 59;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RECVDSTOPTS))) {
+        enum IPV6_RECVDSTOPTS = 58;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RTHDR))) {
+        enum IPV6_RTHDR = 57;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RECVRTHDR))) {
+        enum IPV6_RECVRTHDR = 56;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RTHDRDSTOPTS))) {
+        enum IPV6_RTHDRDSTOPTS = 55;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_HOPOPTS))) {
+        enum IPV6_HOPOPTS = 54;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RECVHOPOPTS))) {
+        enum IPV6_RECVHOPOPTS = 53;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_HOPLIMIT))) {
+        enum IPV6_HOPLIMIT = 52;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RECVHOPLIMIT))) {
+        enum IPV6_RECVHOPLIMIT = 51;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_PKTINFO))) {
+        enum IPV6_PKTINFO = 50;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RECVPKTINFO))) {
+        enum IPV6_RECVPKTINFO = 49;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_HDRINCL))) {
+        enum IPV6_HDRINCL = 36;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IPV6_XFRM_POLICY))) {
+        enum IPV6_XFRM_POLICY = 35;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_IPSEC_POLICY))) {
+        enum IPV6_IPSEC_POLICY = 34;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IPV6_MULTICAST_ALL))) {
+        enum IPV6_MULTICAST_ALL = 29;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_LEAVE_ANYCAST))) {
+        enum IPV6_LEAVE_ANYCAST = 28;
+    }
+    static if(!is(typeof(IPV6_JOIN_ANYCAST))) {
+        enum IPV6_JOIN_ANYCAST = 27;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_V6ONLY))) {
+        enum IPV6_V6ONLY = 26;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_RECVERR))) {
+        enum IPV6_RECVERR = 25;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_MTU))) {
+        enum IPV6_MTU = 24;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_MTU_DISCOVER))) {
+        enum IPV6_MTU_DISCOVER = 23;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IPV6_ROUTER_ALERT))) {
+        enum IPV6_ROUTER_ALERT = 22;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_LEAVE_GROUP))) {
+        enum IPV6_LEAVE_GROUP = 21;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IPV6_JOIN_GROUP))) {
+        enum IPV6_JOIN_GROUP = 20;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_MULTICAST_LOOP))) {
+        enum IPV6_MULTICAST_LOOP = 19;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_MULTICAST_HOPS))) {
+        enum IPV6_MULTICAST_HOPS = 18;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IPV6_MULTICAST_IF))) {
+        enum IPV6_MULTICAST_IF = 17;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_UNICAST_HOPS))) {
+        enum IPV6_UNICAST_HOPS = 16;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_AUTHHDR))) {
+        enum IPV6_AUTHHDR = 10;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_NEXTHOP))) {
+        enum IPV6_NEXTHOP = 9;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IPV6_2292HOPLIMIT))) {
+        enum IPV6_2292HOPLIMIT = 8;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_CHECKSUM))) {
+        enum IPV6_CHECKSUM = 7;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_2292PKTOPTIONS))) {
+        enum IPV6_2292PKTOPTIONS = 6;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_2292RTHDR))) {
+        enum IPV6_2292RTHDR = 5;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_2292DSTOPTS))) {
+        enum IPV6_2292DSTOPTS = 4;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_2292HOPOPTS))) {
+        enum IPV6_2292HOPOPTS = 3;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_2292PKTINFO))) {
+        enum IPV6_2292PKTINFO = 2;
+    }
+
+
+
+
+    static if(!is(typeof(IPV6_ADDRFORM))) {
+        enum IPV6_ADDRFORM = 1;
+    }
+
+
+
+
+    static if(!is(typeof(IP_MAX_MEMBERSHIPS))) {
+        enum IP_MAX_MEMBERSHIPS = 20;
+    }
+
+
+
+
+    static if(!is(typeof(IP_DEFAULT_MULTICAST_LOOP))) {
+        enum IP_DEFAULT_MULTICAST_LOOP = 1;
+    }
+
+
+
+
+    static if(!is(typeof(IP_DEFAULT_MULTICAST_TTL))) {
+        enum IP_DEFAULT_MULTICAST_TTL = 1;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_IP))) {
+        enum SOL_IP = 0;
+    }
+
+
+
+
+    static if(!is(typeof(IP_UNICAST_IF))) {
+        enum IP_UNICAST_IF = 50;
+    }
+
+
+
+
+    static if(!is(typeof(IP_MULTICAST_ALL))) {
+        enum IP_MULTICAST_ALL = 49;
+    }
+
+
+
+
+    static if(!is(typeof(IP_MSFILTER))) {
+        enum IP_MSFILTER = 41;
+    }
+
+
+
+
+    static if(!is(typeof(IP_DROP_SOURCE_MEMBERSHIP))) {
+        enum IP_DROP_SOURCE_MEMBERSHIP = 40;
+    }
+
+
+
+
+    static if(!is(typeof(IP_ADD_SOURCE_MEMBERSHIP))) {
+        enum IP_ADD_SOURCE_MEMBERSHIP = 39;
+    }
+
+
+
+
+    static if(!is(typeof(IP_BLOCK_SOURCE))) {
+        enum IP_BLOCK_SOURCE = 38;
+    }
+
+
+
+
+    static if(!is(typeof(IP_UNBLOCK_SOURCE))) {
+        enum IP_UNBLOCK_SOURCE = 37;
+    }
+
+
+
+
+    static if(!is(typeof(IP_DROP_MEMBERSHIP))) {
+        enum IP_DROP_MEMBERSHIP = 36;
+    }
+
+
+
+
+    static if(!is(typeof(IP_ADD_MEMBERSHIP))) {
+        enum IP_ADD_MEMBERSHIP = 35;
+    }
+
+
+
+
+    static if(!is(typeof(IP_MULTICAST_LOOP))) {
+        enum IP_MULTICAST_LOOP = 34;
+    }
+
+
+
+
+    static if(!is(typeof(IP_MULTICAST_TTL))) {
+        enum IP_MULTICAST_TTL = 33;
+    }
+
+
+
+
+    static if(!is(typeof(IP_MULTICAST_IF))) {
+        enum IP_MULTICAST_IF = 32;
+    }
+
+
+
+
+    static if(!is(typeof(IP_PMTUDISC_OMIT))) {
+        enum IP_PMTUDISC_OMIT = 5;
+    }
+
+
+
+
+    static if(!is(typeof(IP_PMTUDISC_INTERFACE))) {
+        enum IP_PMTUDISC_INTERFACE = 4;
+    }
+
+
+
+
+    static if(!is(typeof(IP_PMTUDISC_PROBE))) {
+        enum IP_PMTUDISC_PROBE = 3;
+    }
+
+
+
+
+    static if(!is(typeof(IP_PMTUDISC_DO))) {
+        enum IP_PMTUDISC_DO = 2;
+    }
+
+
+
+
+    static if(!is(typeof(IP_PMTUDISC_WANT))) {
+        enum IP_PMTUDISC_WANT = 1;
+    }
+
+
+
+
+    static if(!is(typeof(IP_PMTUDISC_DONT))) {
+        enum IP_PMTUDISC_DONT = 0;
+    }
+
+
+
+
+    static if(!is(typeof(IP_RECVFRAGSIZE))) {
+        enum IP_RECVFRAGSIZE = 25;
+    }
+
+
+
+
+    static if(!is(typeof(IP_BIND_ADDRESS_NO_PORT))) {
+        enum IP_BIND_ADDRESS_NO_PORT = 24;
+    }
+
+
+
+
+    static if(!is(typeof(IP_CHECKSUM))) {
+        enum IP_CHECKSUM = 23;
+    }
+
+
+
+
+    static if(!is(typeof(IP_NODEFRAG))) {
+        enum IP_NODEFRAG = 22;
+    }
+
+
+
+
+    static if(!is(typeof(IP_MINTTL))) {
+        enum IP_MINTTL = 21;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IP_ORIGDSTADDR))) {
+        enum IP_ORIGDSTADDR = 20;
+    }
+
+
+
+
+    static if(!is(typeof(IP_TRANSPARENT))) {
+        enum IP_TRANSPARENT = 19;
+    }
+
+
+
+
+    static if(!is(typeof(IP_PASSSEC))) {
+        enum IP_PASSSEC = 18;
+    }
+
+
+
+
+    static if(!is(typeof(IP_XFRM_POLICY))) {
+        enum IP_XFRM_POLICY = 17;
+    }
+
+
+
+
+    static if(!is(typeof(IP_IPSEC_POLICY))) {
+        enum IP_IPSEC_POLICY = 16;
+    }
+
+
+
+
+    static if(!is(typeof(IP_FREEBIND))) {
+        enum IP_FREEBIND = 15;
+    }
+
+
+
+
+    static if(!is(typeof(IP_MTU))) {
+        enum IP_MTU = 14;
+    }
+
+
+
+
+    static if(!is(typeof(IP_RECVTOS))) {
+        enum IP_RECVTOS = 13;
+    }
+
+
+
+
+    static if(!is(typeof(IP_RECVTTL))) {
+        enum IP_RECVTTL = 12;
+    }
+
+
+
+
+    static if(!is(typeof(IP_RECVERR))) {
+        enum IP_RECVERR = 11;
+    }
+
+
+
+
+    static if(!is(typeof(IP_MTU_DISCOVER))) {
+        enum IP_MTU_DISCOVER = 10;
+    }
+
+
+
+
+    static if(!is(typeof(IP_PMTUDISC))) {
+        enum IP_PMTUDISC = 10;
+    }
+
+
+
+
+    static if(!is(typeof(IP_PKTOPTIONS))) {
+        enum IP_PKTOPTIONS = 9;
+    }
+
+
+
+
+    static if(!is(typeof(IP_PKTINFO))) {
+        enum IP_PKTINFO = 8;
+    }
+
+
+
+
+    static if(!is(typeof(IP_ROUTER_ALERT))) {
+        enum IP_ROUTER_ALERT = 5;
+    }
+
+
+
+
+    static if(!is(typeof(MCAST_INCLUDE))) {
+        enum MCAST_INCLUDE = 1;
+    }
+
+
+
+
+    static if(!is(typeof(MCAST_EXCLUDE))) {
+        enum MCAST_EXCLUDE = 0;
+    }
+
+
+
+
+    static if(!is(typeof(MCAST_MSFILTER))) {
+        enum MCAST_MSFILTER = 48;
+    }
+
+
+
+
+    static if(!is(typeof(MCAST_LEAVE_SOURCE_GROUP))) {
+        enum MCAST_LEAVE_SOURCE_GROUP = 47;
+    }
+
+
+
+
+    static if(!is(typeof(MCAST_JOIN_SOURCE_GROUP))) {
+        enum MCAST_JOIN_SOURCE_GROUP = 46;
+    }
+
+
+
+
+    static if(!is(typeof(MCAST_LEAVE_GROUP))) {
+        enum MCAST_LEAVE_GROUP = 45;
+    }
+
+
+
+
+    static if(!is(typeof(MCAST_UNBLOCK_SOURCE))) {
+        enum MCAST_UNBLOCK_SOURCE = 44;
+    }
+
+
+
+
+    static if(!is(typeof(MCAST_BLOCK_SOURCE))) {
+        enum MCAST_BLOCK_SOURCE = 43;
+    }
+
+
+
+
+    static if(!is(typeof(MCAST_JOIN_GROUP))) {
+        enum MCAST_JOIN_GROUP = 42;
+    }
+
+
+
+
+    static if(!is(typeof(IP_RETOPTS))) {
+        enum IP_RETOPTS = 7;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(IP_RECVOPTS))) {
+        enum IP_RECVOPTS = 6;
+    }
+
+
+
+
+    static if(!is(typeof(IP_TTL))) {
+        enum IP_TTL = 2;
+    }
+
+
+
+
+    static if(!is(typeof(IP_TOS))) {
+        enum IP_TOS = 1;
+    }
+
+
+
+
+    static if(!is(typeof(IP_HDRINCL))) {
+        enum IP_HDRINCL = 3;
+    }
+
+
+
+
+    static if(!is(typeof(IP_OPTIONS))) {
+        enum IP_OPTIONS = 4;
+    }
+
+
+
+
+    static if(!is(typeof(__USE_KERNEL_IPV6_DEFS))) {
+        enum __USE_KERNEL_IPV6_DEFS = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__FP_LOGBNAN_IS_MIN))) {
+        enum __FP_LOGBNAN_IS_MIN = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__FP_LOGB0_IS_MIN))) {
+        enum __FP_LOGB0_IS_MIN = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(__HAVE_FLOAT64X_LONG_DOUBLE))) {
+        enum __HAVE_FLOAT64X_LONG_DOUBLE = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__HAVE_FLOAT64X))) {
+        enum __HAVE_FLOAT64X = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__HAVE_DISTINCT_FLOAT128))) {
+        enum __HAVE_DISTINCT_FLOAT128 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__HAVE_FLOAT128))) {
+        enum __HAVE_FLOAT128 = 0;
+    }
+    static if(!is(typeof(__HAVE_FLOATN_NOT_TYPEDEF))) {
+        enum __HAVE_FLOATN_NOT_TYPEDEF = 0;
+    }
+    static if(!is(typeof(__HAVE_DISTINCT_FLOAT64X))) {
+        enum __HAVE_DISTINCT_FLOAT64X = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__HAVE_DISTINCT_FLOAT32X))) {
+        enum __HAVE_DISTINCT_FLOAT32X = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__HAVE_DISTINCT_FLOAT64))) {
+        enum __HAVE_DISTINCT_FLOAT64 = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__HAVE_DISTINCT_FLOAT32))) {
+        enum __HAVE_DISTINCT_FLOAT32 = 0;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(__HAVE_FLOAT128X))) {
+        enum __HAVE_FLOAT128X = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__HAVE_FLOAT32X))) {
+        enum __HAVE_FLOAT32X = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__HAVE_FLOAT64))) {
+        enum __HAVE_FLOAT64 = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__HAVE_FLOAT32))) {
+        enum __HAVE_FLOAT32 = 1;
+    }
+
+
+
+
+    static if(!is(typeof(__HAVE_FLOAT16))) {
+        enum __HAVE_FLOAT16 = 0;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(F_SETLKW64))) {
+        enum F_SETLKW64 = 7;
+    }
+
+
+
+
+    static if(!is(typeof(F_SETLK64))) {
+        enum F_SETLK64 = 6;
+    }
+
+
+
+
+    static if(!is(typeof(F_GETLK64))) {
+        enum F_GETLK64 = 5;
+    }
+
+
+
+
+    static if(!is(typeof(__O_LARGEFILE))) {
+        enum __O_LARGEFILE = 0;
+    }
+    static if(!is(typeof(POSIX_FADV_WILLNEED))) {
+        enum POSIX_FADV_WILLNEED = 3;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(POSIX_FADV_SEQUENTIAL))) {
+        enum POSIX_FADV_SEQUENTIAL = 2;
+    }
+
+
+
+
+    static if(!is(typeof(POSIX_FADV_RANDOM))) {
+        enum POSIX_FADV_RANDOM = 1;
+    }
+
+
+
+
+    static if(!is(typeof(POSIX_FADV_NORMAL))) {
+        enum POSIX_FADV_NORMAL = 0;
+    }
+
+
+
+
+    static if(!is(typeof(__POSIX_FADV_NOREUSE))) {
+        enum __POSIX_FADV_NOREUSE = 5;
+    }
+
+
+
+
+    static if(!is(typeof(__POSIX_FADV_DONTNEED))) {
+        enum __POSIX_FADV_DONTNEED = 4;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(__PCONFIG_KEY_PROGRAM))) {
+        enum __PCONFIG_KEY_PROGRAM = 0x00000001;
+    }
+    static if(!is(typeof(LOCK_UN))) {
+        enum LOCK_UN = 8;
+    }
+
+
+
+
+    static if(!is(typeof(LOCK_NB))) {
+        enum LOCK_NB = 4;
+    }
+
+
+
+
+    static if(!is(typeof(LOCK_EX))) {
+        enum LOCK_EX = 2;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(LOCK_SH))) {
+        enum LOCK_SH = 1;
+    }
+
+
+
+
+    static if(!is(typeof(F_SHLCK))) {
+        enum F_SHLCK = 8;
+    }
+
+
+
+
+    static if(!is(typeof(F_EXLCK))) {
+        enum F_EXLCK = 4;
+    }
+
+
+
+
+    static if(!is(typeof(F_UNLCK))) {
+        enum F_UNLCK = 2;
+    }
+
+
+
+
+    static if(!is(typeof(F_WRLCK))) {
+        enum F_WRLCK = 1;
+    }
+
+
+
+
+    static if(!is(typeof(F_RDLCK))) {
+        enum F_RDLCK = 0;
+    }
+
+
+
+
+    static if(!is(typeof(FD_CLOEXEC))) {
+        enum FD_CLOEXEC = 1;
+    }
+
+
+
+
+    static if(!is(typeof(F_DUPFD_CLOEXEC))) {
+        enum F_DUPFD_CLOEXEC = 1030;
+    }
+
+
+
+
+    static if(!is(typeof(__F_GETOWN_EX))) {
+        enum __F_GETOWN_EX = 16;
+    }
+
+
+
+
+    static if(!is(typeof(__F_SETOWN_EX))) {
+        enum __F_SETOWN_EX = 15;
+    }
+
+
+
+
+    static if(!is(typeof(__F_GETSIG))) {
+        enum __F_GETSIG = 11;
+    }
+
+
+
+
+    static if(!is(typeof(__F_SETSIG))) {
+        enum __F_SETSIG = 10;
+    }
+    static if(!is(typeof(__F_GETOWN))) {
+        enum __F_GETOWN = 9;
+    }
+
+
+
+
+    static if(!is(typeof(__F_SETOWN))) {
+        enum __F_SETOWN = 8;
+    }
+
+
+
+
+    static if(!is(typeof(F_SETFL))) {
+        enum F_SETFL = 4;
+    }
+
+
+
+
+    static if(!is(typeof(F_GETFL))) {
+        enum F_GETFL = 3;
+    }
+
+
+
+
+    static if(!is(typeof(F_SETFD))) {
+        enum F_SETFD = 2;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(F_GETFD))) {
+        enum F_GETFD = 1;
+    }
+
+
+
+
+    static if(!is(typeof(F_DUPFD))) {
+        enum F_DUPFD = 0;
+    }
+    static if(!is(typeof(F_SETLKW))) {
+        enum F_SETLKW = 7;
+    }
+
+
+
+
+    static if(!is(typeof(F_SETLK))) {
+        enum F_SETLK = 6;
+    }
+
+
+
+
+    static if(!is(typeof(F_GETLK))) {
+        enum F_GETLK = 5;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(__O_DSYNC))) {
+        enum __O_DSYNC = std.conv.octal!10000;
+    }
+
+
+
+
+    static if(!is(typeof(__O_PATH))) {
+        enum __O_PATH = std.conv.octal!10000000;
+    }
+
+
+
+
+    static if(!is(typeof(__O_NOATIME))) {
+        enum __O_NOATIME = std.conv.octal!1000000;
+    }
+
+
+
+
+    static if(!is(typeof(__O_DIRECT))) {
+        enum __O_DIRECT = std.conv.octal!40000;
+    }
+
+
+
+
+    static if(!is(typeof(__O_CLOEXEC))) {
+        enum __O_CLOEXEC = std.conv.octal!2000000;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(__O_NOFOLLOW))) {
+        enum __O_NOFOLLOW = std.conv.octal!400000;
+    }
+
+
+
+
+    static if(!is(typeof(__O_DIRECTORY))) {
+        enum __O_DIRECTORY = std.conv.octal!200000;
+    }
+
+
+
+
+    static if(!is(typeof(O_ASYNC))) {
+        enum O_ASYNC = std.conv.octal!20000;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(O_SYNC))) {
+        enum O_SYNC = std.conv.octal!4010000;
+    }
+    static if(!is(typeof(O_NONBLOCK))) {
+        enum O_NONBLOCK = std.conv.octal!4000;
+    }
+
+
+
+
+    static if(!is(typeof(O_APPEND))) {
+        enum O_APPEND = std.conv.octal!2000;
+    }
+
+
+
+
+    static if(!is(typeof(O_TRUNC))) {
+        enum O_TRUNC = std.conv.octal!1000;
+    }
+
+
+
+
+    static if(!is(typeof(O_NOCTTY))) {
+        enum O_NOCTTY = std.conv.octal!400;
+    }
+
+
+
+
+    static if(!is(typeof(O_EXCL))) {
+        enum O_EXCL = std.conv.octal!200;
+    }
+
+
+
+
+    static if(!is(typeof(O_CREAT))) {
+        enum O_CREAT = std.conv.octal!100;
+    }
+
+
+
+
+    static if(!is(typeof(O_RDWR))) {
+        enum O_RDWR = std.conv.octal!2;
+    }
+
+
+
+
+    static if(!is(typeof(O_WRONLY))) {
+        enum O_WRONLY = std.conv.octal!1;
+    }
+    static if(!is(typeof(O_RDONLY))) {
+        enum O_RDONLY = 0;
+    }
+
+
+
+
+    static if(!is(typeof(O_ACCMODE))) {
+        enum O_ACCMODE = std.conv.octal!3;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_BITS_ERRNO_H))) {
+        enum _BITS_ERRNO_H = 1;
+    }
+    static if(!is(typeof(_DIRENT_MATCHES_DIRENT64))) {
+        enum _DIRENT_MATCHES_DIRENT64 = 1;
+    }
+    static if(!is(typeof(__CPU_SETSIZE))) {
+        enum __CPU_SETSIZE = 1024;
+    }
+
+
+
+
+    static if(!is(typeof(_BITS_CPU_SET_H))) {
+        enum _BITS_CPU_SET_H = 1;
+    }
+    static if(!is(typeof(_MM_FROUND_RAISE_EXC))) {
+        enum _MM_FROUND_RAISE_EXC = 0x00;
+    }
+
+
+
+
+    static if(!is(typeof(_MM_FROUND_NO_EXC))) {
+        enum _MM_FROUND_NO_EXC = 0x08;
+    }
+    static if(!is(typeof(_BITS_BYTESWAP_H))) {
+        enum _BITS_BYTESWAP_H = 1;
+    }
+    static if(!is(typeof(_ASSERT_H))) {
+        enum _ASSERT_H = 1;
+    }
+    static if(!is(typeof(__BITS_PER_LONG))) {
+        enum __BITS_PER_LONG = 64;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SIOCGSTAMPNS))) {
+        enum SIOCGSTAMPNS = 0x8907;
+    }
+
+
+
+
+    static if(!is(typeof(SIOCGSTAMP))) {
+        enum SIOCGSTAMP = 0x8906;
+    }
+
+
+
+
+    static if(!is(typeof(SIOCATMARK))) {
+        enum SIOCATMARK = 0x8905;
+    }
+
+
+
+
+    static if(!is(typeof(SIOCGPGRP))) {
+        enum SIOCGPGRP = 0x8904;
+    }
+
+
+
+
+    static if(!is(typeof(FIOGETOWN))) {
+        enum FIOGETOWN = 0x8903;
+    }
+
+
+
+
+    static if(!is(typeof(SIOCSPGRP))) {
+        enum SIOCSPGRP = 0x8902;
+    }
+
+
+
+
+    static if(!is(typeof(FIOSETOWN))) {
+        enum FIOSETOWN = 0x8901;
+    }
+    static if(!is(typeof(SO_SNDTIMEO_NEW))) {
+        enum SO_SNDTIMEO_NEW = 67;
+    }
+
+
+
+
+    static if(!is(typeof(SO_RCVTIMEO_NEW))) {
+        enum SO_RCVTIMEO_NEW = 66;
+    }
+
+
+
+
+    static if(!is(typeof(SO_TIMESTAMPING_NEW))) {
+        enum SO_TIMESTAMPING_NEW = 65;
+    }
+
+
+
+
+    static if(!is(typeof(SO_TIMESTAMPNS_NEW))) {
+        enum SO_TIMESTAMPNS_NEW = 64;
+    }
+    static if(!is(typeof(SO_TIMESTAMP_NEW))) {
+        enum SO_TIMESTAMP_NEW = 63;
+    }
+
+
+
+
+    static if(!is(typeof(SO_TIMESTAMPING_OLD))) {
+        enum SO_TIMESTAMPING_OLD = 37;
+    }
+
+
+
+
+    static if(!is(typeof(SO_TIMESTAMPNS_OLD))) {
+        enum SO_TIMESTAMPNS_OLD = 35;
+    }
+
+
+
+
+    static if(!is(typeof(SO_TIMESTAMP_OLD))) {
+        enum SO_TIMESTAMP_OLD = 29;
+    }
+
+
+
+
+    static if(!is(typeof(SO_BINDTOIFINDEX))) {
+        enum SO_BINDTOIFINDEX = 62;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SO_TXTIME))) {
+        enum SO_TXTIME = 61;
+    }
+
+
+
+
+    static if(!is(typeof(SO_ZEROCOPY))) {
+        enum SO_ZEROCOPY = 60;
+    }
+
+
+
+
+    static if(!is(typeof(SO_PEERGROUPS))) {
+        enum SO_PEERGROUPS = 59;
+    }
+
+
+
+
+    static if(!is(typeof(SCM_TIMESTAMPING_PKTINFO))) {
+        enum SCM_TIMESTAMPING_PKTINFO = 58;
+    }
+
+
+
+
+    static if(!is(typeof(SO_COOKIE))) {
+        enum SO_COOKIE = 57;
+    }
+
+
+
+
+    static if(!is(typeof(SO_INCOMING_NAPI_ID))) {
+        enum SO_INCOMING_NAPI_ID = 56;
+    }
+
+
+
+
+    static if(!is(typeof(SO_MEMINFO))) {
+        enum SO_MEMINFO = 55;
+    }
+
+
+
+
+    static if(!is(typeof(SCM_TIMESTAMPING_OPT_STATS))) {
+        enum SCM_TIMESTAMPING_OPT_STATS = 54;
+    }
+
+
+
+
+    static if(!is(typeof(SO_CNX_ADVICE))) {
+        enum SO_CNX_ADVICE = 53;
+    }
+
+
+
+
+    static if(!is(typeof(SO_ATTACH_REUSEPORT_EBPF))) {
+        enum SO_ATTACH_REUSEPORT_EBPF = 52;
+    }
+
+
+
+
+    static if(!is(typeof(SO_ATTACH_REUSEPORT_CBPF))) {
+        enum SO_ATTACH_REUSEPORT_CBPF = 51;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SO_ATTACH_BPF))) {
+        enum SO_ATTACH_BPF = 50;
+    }
+
+
+
+
+    static if(!is(typeof(SO_INCOMING_CPU))) {
+        enum SO_INCOMING_CPU = 49;
+    }
+
+
+
+
+    static if(!is(typeof(SO_BPF_EXTENSIONS))) {
+        enum SO_BPF_EXTENSIONS = 48;
+    }
+
+
+
+
+    static if(!is(typeof(SO_MAX_PACING_RATE))) {
+        enum SO_MAX_PACING_RATE = 47;
+    }
+
+
+
+
+    static if(!is(typeof(SO_BUSY_POLL))) {
+        enum SO_BUSY_POLL = 46;
+    }
+
+
+
+
+    static if(!is(typeof(SO_SELECT_ERR_QUEUE))) {
+        enum SO_SELECT_ERR_QUEUE = 45;
+    }
+
+
+
+
+    static if(!is(typeof(SO_LOCK_FILTER))) {
+        enum SO_LOCK_FILTER = 44;
+    }
+
+
+
+
+    static if(!is(typeof(SO_NOFCS))) {
+        enum SO_NOFCS = 43;
+    }
+
+
+
+
+    static if(!is(typeof(SO_PEEK_OFF))) {
+        enum SO_PEEK_OFF = 42;
+    }
+    static if(!is(typeof(SO_WIFI_STATUS))) {
+        enum SO_WIFI_STATUS = 41;
+    }
+
+
+
+
+    static if(!is(typeof(SO_RXQ_OVFL))) {
+        enum SO_RXQ_OVFL = 40;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_UBYTE_OPS))) {
+        enum _SIDD_UBYTE_OPS = 0x00;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_UWORD_OPS))) {
+        enum _SIDD_UWORD_OPS = 0x01;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_SBYTE_OPS))) {
+        enum _SIDD_SBYTE_OPS = 0x02;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_SWORD_OPS))) {
+        enum _SIDD_SWORD_OPS = 0x03;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_CMP_EQUAL_ANY))) {
+        enum _SIDD_CMP_EQUAL_ANY = 0x00;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_CMP_RANGES))) {
+        enum _SIDD_CMP_RANGES = 0x04;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_CMP_EQUAL_EACH))) {
+        enum _SIDD_CMP_EQUAL_EACH = 0x08;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_CMP_EQUAL_ORDERED))) {
+        enum _SIDD_CMP_EQUAL_ORDERED = 0x0c;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_POSITIVE_POLARITY))) {
+        enum _SIDD_POSITIVE_POLARITY = 0x00;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_NEGATIVE_POLARITY))) {
+        enum _SIDD_NEGATIVE_POLARITY = 0x10;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_MASKED_POSITIVE_POLARITY))) {
+        enum _SIDD_MASKED_POSITIVE_POLARITY = 0x20;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_MASKED_NEGATIVE_POLARITY))) {
+        enum _SIDD_MASKED_NEGATIVE_POLARITY = 0x30;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_LEAST_SIGNIFICANT))) {
+        enum _SIDD_LEAST_SIGNIFICANT = 0x00;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_MOST_SIGNIFICANT))) {
+        enum _SIDD_MOST_SIGNIFICANT = 0x40;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_BIT_MASK))) {
+        enum _SIDD_BIT_MASK = 0x00;
+    }
+
+
+
+
+    static if(!is(typeof(_SIDD_UNIT_MASK))) {
+        enum _SIDD_UNIT_MASK = 0x40;
+    }
+    static if(!is(typeof(SO_DOMAIN))) {
+        enum SO_DOMAIN = 39;
+    }
+
+
+
+
+    static if(!is(typeof(SO_PROTOCOL))) {
+        enum SO_PROTOCOL = 38;
+    }
+
+
+
+
+    static if(!is(typeof(SO_MARK))) {
+        enum SO_MARK = 36;
+    }
+
+
+
+
+    static if(!is(typeof(SO_PASSSEC))) {
+        enum SO_PASSSEC = 34;
+    }
+
+
+
+
+    static if(!is(typeof(SO_PEERSEC))) {
+        enum SO_PEERSEC = 31;
+    }
+
+
+
+
+    static if(!is(typeof(SO_ACCEPTCONN))) {
+        enum SO_ACCEPTCONN = 30;
+    }
+
+
+
+
+    static if(!is(typeof(SO_PEERNAME))) {
+        enum SO_PEERNAME = 28;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SO_DETACH_FILTER))) {
+        enum SO_DETACH_FILTER = 27;
+    }
+
+
+
+
+    static if(!is(typeof(SO_ATTACH_FILTER))) {
+        enum SO_ATTACH_FILTER = 26;
+    }
+
+
+
+
+    static if(!is(typeof(SO_BINDTODEVICE))) {
+        enum SO_BINDTODEVICE = 25;
+    }
+
+
+
+
+    static if(!is(typeof(SO_SECURITY_ENCRYPTION_NETWORK))) {
+        enum SO_SECURITY_ENCRYPTION_NETWORK = 24;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(SO_SECURITY_ENCRYPTION_TRANSPORT))) {
+        enum SO_SECURITY_ENCRYPTION_TRANSPORT = 23;
+    }
+    static if(!is(typeof(SO_SECURITY_AUTHENTICATION))) {
+        enum SO_SECURITY_AUTHENTICATION = 22;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(__GNUC_VA_LIST))) {
+        enum __GNUC_VA_LIST = 1;
+    }
+
+
+
+
+    static if(!is(typeof(SO_SNDTIMEO_OLD))) {
+        enum SO_SNDTIMEO_OLD = 21;
+    }
+
+
+
+
+    static if(!is(typeof(SO_RCVTIMEO_OLD))) {
+        enum SO_RCVTIMEO_OLD = 20;
+    }
+
+
+
+
+    static if(!is(typeof(SO_SNDLOWAT))) {
+        enum SO_SNDLOWAT = 19;
+    }
+
+
+
+
+    static if(!is(typeof(SO_RCVLOWAT))) {
+        enum SO_RCVLOWAT = 18;
+    }
+
+
+
+
+    static if(!is(typeof(SO_PEERCRED))) {
+        enum SO_PEERCRED = 17;
+    }
+
+
+
+
+    static if(!is(typeof(SO_PASSCRED))) {
+        enum SO_PASSCRED = 16;
+    }
+
+
+
+
+    static if(!is(typeof(SO_REUSEPORT))) {
+        enum SO_REUSEPORT = 15;
+    }
+
+
+
+
+    static if(!is(typeof(SO_BSDCOMPAT))) {
+        enum SO_BSDCOMPAT = 14;
+    }
+
+
+
+
+    static if(!is(typeof(SO_LINGER))) {
+        enum SO_LINGER = 13;
+    }
+
+
+
+
+    static if(!is(typeof(SO_PRIORITY))) {
+        enum SO_PRIORITY = 12;
+    }
+
+
+
+
+    static if(!is(typeof(SO_NO_CHECK))) {
+        enum SO_NO_CHECK = 11;
+    }
+
+
+
+
+    static if(!is(typeof(SO_OOBINLINE))) {
+        enum SO_OOBINLINE = 10;
+    }
+
+
+
+
+    static if(!is(typeof(SO_KEEPALIVE))) {
+        enum SO_KEEPALIVE = 9;
+    }
+
+
+
+
+    static if(!is(typeof(SO_RCVBUFFORCE))) {
+        enum SO_RCVBUFFORCE = 33;
+    }
+
+
+
+
+    static if(!is(typeof(SO_SNDBUFFORCE))) {
+        enum SO_SNDBUFFORCE = 32;
+    }
+
+
+
+
+    static if(!is(typeof(SO_RCVBUF))) {
+        enum SO_RCVBUF = 8;
+    }
+
+
+
+
+    static if(!is(typeof(SO_SNDBUF))) {
+        enum SO_SNDBUF = 7;
+    }
+
+
+
+
+    static if(!is(typeof(SO_BROADCAST))) {
+        enum SO_BROADCAST = 6;
+    }
+
+
+
+
+    static if(!is(typeof(SO_DONTROUTE))) {
+        enum SO_DONTROUTE = 5;
+    }
+
+
+
+
+    static if(!is(typeof(SO_ERROR))) {
+        enum SO_ERROR = 4;
+    }
+
+
+
+
+    static if(!is(typeof(SO_TYPE))) {
+        enum SO_TYPE = 3;
+    }
+
+
+
+
+    static if(!is(typeof(SO_REUSEADDR))) {
+        enum SO_REUSEADDR = 2;
+    }
+
+
+
+
+    static if(!is(typeof(SO_DEBUG))) {
+        enum SO_DEBUG = 1;
+    }
+
+
+
+
+    static if(!is(typeof(SOL_SOCKET))) {
+        enum SOL_SOCKET = 1;
+    }
+    static if(!is(typeof(EHWPOISON))) {
+        enum EHWPOISON = 133;
+    }
+
+
+
+
+    static if(!is(typeof(ERFKILL))) {
+        enum ERFKILL = 132;
+    }
+
+
+
+
+    static if(!is(typeof(ENOTRECOVERABLE))) {
+        enum ENOTRECOVERABLE = 131;
+    }
+
+
+
+
+    static if(!is(typeof(EOWNERDEAD))) {
+        enum EOWNERDEAD = 130;
+    }
+
+
+
+
+    static if(!is(typeof(EKEYREJECTED))) {
+        enum EKEYREJECTED = 129;
+    }
+
+
+
+
+    static if(!is(typeof(EKEYREVOKED))) {
+        enum EKEYREVOKED = 128;
+    }
+
+
+
+
+    static if(!is(typeof(EKEYEXPIRED))) {
+        enum EKEYEXPIRED = 127;
+    }
+
+
+
+
+    static if(!is(typeof(ENOKEY))) {
+        enum ENOKEY = 126;
+    }
+
+
+
+
+    static if(!is(typeof(ECANCELED))) {
+        enum ECANCELED = 125;
+    }
+
+
+
+
+    static if(!is(typeof(EMEDIUMTYPE))) {
+        enum EMEDIUMTYPE = 124;
+    }
+
+
+
+
+    static if(!is(typeof(ENOMEDIUM))) {
+        enum ENOMEDIUM = 123;
+    }
+
+
+
+
+    static if(!is(typeof(EDQUOT))) {
+        enum EDQUOT = 122;
+    }
+
+
+
+
+    static if(!is(typeof(EREMOTEIO))) {
+        enum EREMOTEIO = 121;
+    }
+
+
+
+
+    static if(!is(typeof(EISNAM))) {
+        enum EISNAM = 120;
+    }
+
+
+
+
+    static if(!is(typeof(ENAVAIL))) {
+        enum ENAVAIL = 119;
+    }
+
+
+
+
+    static if(!is(typeof(ENOTNAM))) {
+        enum ENOTNAM = 118;
+    }
+
+
+
+
+    static if(!is(typeof(EUCLEAN))) {
+        enum EUCLEAN = 117;
+    }
+
+
+
+
+    static if(!is(typeof(ESTALE))) {
+        enum ESTALE = 116;
+    }
+
+
+
+
+    static if(!is(typeof(EINPROGRESS))) {
+        enum EINPROGRESS = 115;
+    }
+
+
+
+
+    static if(!is(typeof(EALREADY))) {
+        enum EALREADY = 114;
+    }
+
+
+
+
+    static if(!is(typeof(EHOSTUNREACH))) {
+        enum EHOSTUNREACH = 113;
+    }
+
+
+
+
+    static if(!is(typeof(EHOSTDOWN))) {
+        enum EHOSTDOWN = 112;
+    }
+
+
+
+
+    static if(!is(typeof(ECONNREFUSED))) {
+        enum ECONNREFUSED = 111;
+    }
+
+
+
+
+    static if(!is(typeof(ETIMEDOUT))) {
+        enum ETIMEDOUT = 110;
+    }
+
+
+
+
+    static if(!is(typeof(ETOOMANYREFS))) {
+        enum ETOOMANYREFS = 109;
+    }
+
+
+
+
+    static if(!is(typeof(ESHUTDOWN))) {
+        enum ESHUTDOWN = 108;
+    }
+
+
+
+
+    static if(!is(typeof(ENOTCONN))) {
+        enum ENOTCONN = 107;
+    }
+
+
+
+
+    static if(!is(typeof(EISCONN))) {
+        enum EISCONN = 106;
+    }
+
+
+
+
+    static if(!is(typeof(ENOBUFS))) {
+        enum ENOBUFS = 105;
+    }
+
+
+
+
+    static if(!is(typeof(ECONNRESET))) {
+        enum ECONNRESET = 104;
+    }
+    static if(!is(typeof(ECONNABORTED))) {
+        enum ECONNABORTED = 103;
+    }
+
+
+
+
+    static if(!is(typeof(ENETRESET))) {
+        enum ENETRESET = 102;
+    }
+
+
+
+
+    static if(!is(typeof(ENETUNREACH))) {
+        enum ENETUNREACH = 101;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(ENETDOWN))) {
+        enum ENETDOWN = 100;
+    }
+
+
+
+
+    static if(!is(typeof(EADDRNOTAVAIL))) {
+        enum EADDRNOTAVAIL = 99;
+    }
+
+
+
+
+    static if(!is(typeof(EADDRINUSE))) {
+        enum EADDRINUSE = 98;
+    }
+
+
+
+
+    static if(!is(typeof(EAFNOSUPPORT))) {
+        enum EAFNOSUPPORT = 97;
+    }
+
+
+
+
+    static if(!is(typeof(EPFNOSUPPORT))) {
+        enum EPFNOSUPPORT = 96;
+    }
+
+
+
+
+    static if(!is(typeof(EOPNOTSUPP))) {
+        enum EOPNOTSUPP = 95;
+    }
+
+
+
+
+    static if(!is(typeof(ESOCKTNOSUPPORT))) {
+        enum ESOCKTNOSUPPORT = 94;
+    }
+
+
+
+
+    static if(!is(typeof(EPROTONOSUPPORT))) {
+        enum EPROTONOSUPPORT = 93;
+    }
+
+
+
+
+    static if(!is(typeof(ENOPROTOOPT))) {
+        enum ENOPROTOOPT = 92;
+    }
+
+
+
+
+    static if(!is(typeof(EPROTOTYPE))) {
+        enum EPROTOTYPE = 91;
+    }
+
+
+
+
+    static if(!is(typeof(EMSGSIZE))) {
+        enum EMSGSIZE = 90;
+    }
+
+
+
+
+    static if(!is(typeof(EDESTADDRREQ))) {
+        enum EDESTADDRREQ = 89;
+    }
+
+
+
+
+    static if(!is(typeof(ENOTSOCK))) {
+        enum ENOTSOCK = 88;
+    }
+
+
+
+
+    static if(!is(typeof(EUSERS))) {
+        enum EUSERS = 87;
+    }
+
+
+
+
+    static if(!is(typeof(ESTRPIPE))) {
+        enum ESTRPIPE = 86;
+    }
+
+
+
+
+    static if(!is(typeof(ERESTART))) {
+        enum ERESTART = 85;
+    }
+
+
+
+
+    static if(!is(typeof(EILSEQ))) {
+        enum EILSEQ = 84;
+    }
+
+
+
+
+    static if(!is(typeof(ELIBEXEC))) {
+        enum ELIBEXEC = 83;
+    }
+
+
+
+
+    static if(!is(typeof(ELIBMAX))) {
+        enum ELIBMAX = 82;
+    }
+
+
+
+
+    static if(!is(typeof(ELIBSCN))) {
+        enum ELIBSCN = 81;
+    }
+
+
+
+
+    static if(!is(typeof(ELIBBAD))) {
+        enum ELIBBAD = 80;
+    }
+
+
+
+
+    static if(!is(typeof(ELIBACC))) {
+        enum ELIBACC = 79;
+    }
+
+
+
+
+    static if(!is(typeof(EREMCHG))) {
+        enum EREMCHG = 78;
+    }
+
+
+
+
+    static if(!is(typeof(EBADFD))) {
+        enum EBADFD = 77;
+    }
+
+
+
+
+    static if(!is(typeof(ENOTUNIQ))) {
+        enum ENOTUNIQ = 76;
+    }
+
+
+
+
+    static if(!is(typeof(EOVERFLOW))) {
+        enum EOVERFLOW = 75;
+    }
+
+
+
+
+    static if(!is(typeof(EBADMSG))) {
+        enum EBADMSG = 74;
+    }
+
+
+
+
+    static if(!is(typeof(EDOTDOT))) {
+        enum EDOTDOT = 73;
+    }
+
+
+
+
+    static if(!is(typeof(EMULTIHOP))) {
+        enum EMULTIHOP = 72;
+    }
+
+
+
+
+    static if(!is(typeof(EPROTO))) {
+        enum EPROTO = 71;
+    }
+
+
+
+
+    static if(!is(typeof(ECOMM))) {
+        enum ECOMM = 70;
+    }
+
+
+
+
+    static if(!is(typeof(ESRMNT))) {
+        enum ESRMNT = 69;
+    }
+
+
+
+
+    static if(!is(typeof(EADV))) {
+        enum EADV = 68;
+    }
+
+
+
+
+    static if(!is(typeof(ENOLINK))) {
+        enum ENOLINK = 67;
+    }
+
+
+
+
+    static if(!is(typeof(EREMOTE))) {
+        enum EREMOTE = 66;
+    }
+
+
+
+
+    static if(!is(typeof(ENOPKG))) {
+        enum ENOPKG = 65;
+    }
+
+
+
+
+    static if(!is(typeof(ENONET))) {
+        enum ENONET = 64;
+    }
+
+
+
+
+    static if(!is(typeof(ENOSR))) {
+        enum ENOSR = 63;
+    }
+
+
+
+
+    static if(!is(typeof(ETIME))) {
+        enum ETIME = 62;
+    }
+
+
+
+
+    static if(!is(typeof(ENODATA))) {
+        enum ENODATA = 61;
+    }
+
+
+
+
+    static if(!is(typeof(ENOSTR))) {
+        enum ENOSTR = 60;
+    }
+
+
+
+
+    static if(!is(typeof(EBFONT))) {
+        enum EBFONT = 59;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(EBADSLT))) {
+        enum EBADSLT = 57;
+    }
+
+
+
+
+    static if(!is(typeof(EBADRQC))) {
+        enum EBADRQC = 56;
+    }
+
+
+
+
+    static if(!is(typeof(ENOANO))) {
+        enum ENOANO = 55;
+    }
+
+
+
+
+    static if(!is(typeof(EXFULL))) {
+        enum EXFULL = 54;
+    }
+
+
+
+
+    static if(!is(typeof(EBADR))) {
+        enum EBADR = 53;
+    }
+
+
+
+
+    static if(!is(typeof(EBADE))) {
+        enum EBADE = 52;
+    }
+
+
+
+
+    static if(!is(typeof(EL2HLT))) {
+        enum EL2HLT = 51;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(ENOCSI))) {
+        enum ENOCSI = 50;
+    }
+
+
+
+
+    static if(!is(typeof(EUNATCH))) {
+        enum EUNATCH = 49;
+    }
+
+
+
+
+    static if(!is(typeof(ELNRNG))) {
+        enum ELNRNG = 48;
+    }
+
+
+
+
+    static if(!is(typeof(EL3RST))) {
+        enum EL3RST = 47;
+    }
+
+
+
+
+    static if(!is(typeof(EL3HLT))) {
+        enum EL3HLT = 46;
+    }
+
+
+
+
+    static if(!is(typeof(EL2NSYNC))) {
+        enum EL2NSYNC = 45;
+    }
+
+
+
+
+    static if(!is(typeof(ECHRNG))) {
+        enum ECHRNG = 44;
+    }
+
+
+
+
+    static if(!is(typeof(EIDRM))) {
+        enum EIDRM = 43;
+    }
+
+
+
+
+    static if(!is(typeof(ENOMSG))) {
+        enum ENOMSG = 42;
+    }
+    static if(!is(typeof(ELOOP))) {
+        enum ELOOP = 40;
+    }
+
+
+
+
+    static if(!is(typeof(ENOTEMPTY))) {
+        enum ENOTEMPTY = 39;
+    }
+
+
+
+
+    static if(!is(typeof(ENOSYS))) {
+        enum ENOSYS = 38;
+    }
+
+
+
+
+    static if(!is(typeof(ENOLCK))) {
+        enum ENOLCK = 37;
+    }
+
+
+
+
+    static if(!is(typeof(ENAMETOOLONG))) {
+        enum ENAMETOOLONG = 36;
+    }
+
+
+
+
+    static if(!is(typeof(EDEADLK))) {
+        enum EDEADLK = 35;
+    }
+    static if(!is(typeof(ERANGE))) {
+        enum ERANGE = 34;
+    }
+
+
+
+
+    static if(!is(typeof(EDOM))) {
+        enum EDOM = 33;
+    }
+
+
+
+
+    static if(!is(typeof(EPIPE))) {
+        enum EPIPE = 32;
+    }
+    static if(!is(typeof(EMLINK))) {
+        enum EMLINK = 31;
+    }
+
+
+
+
+    static if(!is(typeof(EROFS))) {
+        enum EROFS = 30;
+    }
+
+
+
+
+    static if(!is(typeof(ESPIPE))) {
+        enum ESPIPE = 29;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(ENOSPC))) {
+        enum ENOSPC = 28;
+    }
+
+
+
+
+    static if(!is(typeof(EFBIG))) {
+        enum EFBIG = 27;
+    }
+
+
+
+
+    static if(!is(typeof(ETXTBSY))) {
+        enum ETXTBSY = 26;
+    }
+
+
+
+
+    static if(!is(typeof(ENOTTY))) {
+        enum ENOTTY = 25;
+    }
+
+
+
+
+    static if(!is(typeof(EMFILE))) {
+        enum EMFILE = 24;
+    }
+
+
+
+
+    static if(!is(typeof(ENFILE))) {
+        enum ENFILE = 23;
+    }
+
+
+
+
+    static if(!is(typeof(EINVAL))) {
+        enum EINVAL = 22;
+    }
+
+
+
+
+    static if(!is(typeof(EISDIR))) {
+        enum EISDIR = 21;
+    }
+
+
+
+
+    static if(!is(typeof(ENOTDIR))) {
+        enum ENOTDIR = 20;
+    }
+
+
+
+
+    static if(!is(typeof(ENODEV))) {
+        enum ENODEV = 19;
+    }
+
+
+
+
+    static if(!is(typeof(EXDEV))) {
+        enum EXDEV = 18;
+    }
+
+
+
+
+    static if(!is(typeof(EEXIST))) {
+        enum EEXIST = 17;
+    }
+
+
+
+
+    static if(!is(typeof(EBUSY))) {
+        enum EBUSY = 16;
+    }
+    static if(!is(typeof(ENOTBLK))) {
+        enum ENOTBLK = 15;
+    }
+
+
+
+
+    static if(!is(typeof(EFAULT))) {
+        enum EFAULT = 14;
+    }
+
+
+
+
+    static if(!is(typeof(EACCES))) {
+        enum EACCES = 13;
+    }
+
+
+
+
+    static if(!is(typeof(ENOMEM))) {
+        enum ENOMEM = 12;
+    }
+
+
+
+
+    static if(!is(typeof(EAGAIN))) {
+        enum EAGAIN = 11;
+    }
+
+
+
+
+    static if(!is(typeof(ECHILD))) {
+        enum ECHILD = 10;
+    }
+
+
+
+
+    static if(!is(typeof(EBADF))) {
+        enum EBADF = 9;
+    }
+
+
+
+
+    static if(!is(typeof(ENOEXEC))) {
+        enum ENOEXEC = 8;
+    }
+
+
+
+
+    static if(!is(typeof(E2BIG))) {
+        enum E2BIG = 7;
+    }
+
+
+
+
+    static if(!is(typeof(ENXIO))) {
+        enum ENXIO = 6;
+    }
+
+
+
+
+    static if(!is(typeof(EIO))) {
+        enum EIO = 5;
+    }
+
+
+
+
+    static if(!is(typeof(EINTR))) {
+        enum EINTR = 4;
+    }
+
+
+
+
+    static if(!is(typeof(ESRCH))) {
+        enum ESRCH = 3;
+    }
+
+
+
+
+    static if(!is(typeof(ENOENT))) {
+        enum ENOENT = 2;
+    }
+
+
+
+
+    static if(!is(typeof(EPERM))) {
+        enum EPERM = 1;
+    }
+    static if(!is(typeof(_ARPA_INET_H))) {
+        enum _ARPA_INET_H = 1;
+    }
+
+
+
+
+
+
+    static if(!is(typeof(_ALLOCA_H))) {
+        enum _ALLOCA_H = 1;
+    }
+    static if(!is(typeof(_MM_HINT_ET0))) {
+        enum _MM_HINT_ET0 = 7;
+    }
+
+
+
+
+    static if(!is(typeof(_MM_HINT_ET1))) {
+        enum _MM_HINT_ET1 = 6;
+    }
+
+
+
+
+    static if(!is(typeof(_MM_HINT_T0))) {
+        enum _MM_HINT_T0 = 3;
+    }
+
+
+
+
+    static if(!is(typeof(_MM_HINT_T1))) {
+        enum _MM_HINT_T1 = 2;
+    }
+
+
+
+
+    static if(!is(typeof(_MM_HINT_T2))) {
+        enum _MM_HINT_T2 = 1;
+    }
+
+
+
+
+    static if(!is(typeof(_MM_HINT_NTA))) {
+        enum _MM_HINT_NTA = 0;
+    }
 }
 
 
