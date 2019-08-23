@@ -1,5 +1,12 @@
 module juliad.types;
 
+import std.traits : EnumMembers;
+import std.array : array;
+import std.format : format;
+import std.string : toLower;
+import std.typecons : nullable, Nullable;
+import std.conv : to;
+
 import juliad.julia;
 
 struct JuliaToDType(T) {
@@ -34,18 +41,16 @@ enum JuliaType {
 	Method,
 	Module,
 	Task,
-	@JuliaToDType!String String,
+	@JuliaToDType!string String,
 	@JuliaToDType!float Float16,
 	@JuliaToDType!float Float32,
 	@JuliaToDType!double Float64
 }
 
+pragma(msg, __traits(getAttributes, __traits(getMember, JuliaType, "String")));
+
 string[] buildTypeStrings() pure @safe {
 	import std.algorithm.iteration : map;
-	import std.traits : EnumMembers;
-	import std.array : array;
-	import std.string : toLower;
-	import std.conv : to;
 
 	return [EnumMembers!JuliaType]
 		.map!(t => to!string(t))
@@ -56,7 +61,6 @@ string[] buildTypeStrings() pure @safe {
 enum string[] typeStrings = buildTypeStrings();
 
 private string genJlIsType(string type) {
-	import std.format : format;
 	string s = 
 `bool jl_is_%1$s(_jl_value_t* v) {
 	return jl_typeis(v, jl_%1$s_type);
@@ -66,6 +70,18 @@ private string genJlIsType(string type) {
 
 static foreach(t; typeStrings) {
 	mixin(genJlIsType(t));
+}
+
+Nullable!JuliaType getType(jl_value_t* v) {
+	enum ems = [EnumMembers!JuliaType];
+	static foreach(idx, t; typeStrings) {{
+		enum s = format(`bool i = jl_is_%s(v);`, t);
+		mixin(s);
+		if(i) {
+			return nullable(ems[idx]);
+		}
+	}}
+	return Nullable!(JuliaType).init;
 }
 
 //#define jl_astaggedvalue(v)                                             \
@@ -107,11 +123,46 @@ bool jl_is_nothing(jl_value_t* v) {
 	return v == jl_nothing;
 }
 
-T get(T)(jl_value_t* v) {
-	static foreach(em; [EnumMembers!JuliaType]) {{
-		enum uda = __traits(getAttributes, em);	
-		static if(uda.length > 0 && is(uda == JuliaToDType!F, F)) {
-			alias DT = F;
-		}
-	}}
+Nullable!T get(T)(jl_value_t* v) {
+	Nullable!JuliaType jt = getType(v);
+	if(jt.isNull()) {
+		return Nullable!(T).init;
+	}
+
+	enum JuliaType tt = __traits(getMember, EnumMembers,
+			T.stringof
 }
+
+/*Nullable!T get(T)(jl_value_t* v) {
+	Nullable!JuliaType jt = getType(v);
+	if(jt.isNull()) {
+		return Nullable!(T).init;
+	}
+	switch(jt.get()) {
+		static foreach(em; EnumMembers!JuliaType) {{
+			enum emStr = to!string(em);
+			alias emMem = __traits(getMember, JuliaType, emStr);
+			static if(__traits(getAttributes, emMem).length > 0) {{
+				alias uda = __traits(getAttributes, emMem)[0];
+				pragma(msg, uda);
+				static if(is(uda : JuliaToDType!F, F)) {{
+					enum s = format("Nullable!%s ret = nullable(jl_unbox_%s(v));", 
+							F.stringof, emStr.toLower());
+					pragma(msg, s);
+					case em:
+						mixin(s);
+						return ret;
+				}}
+			}}
+			//enum uda = __traits(getAttributes, __traits(getMember, JuliaType,
+			//				em.stringof));
+			//static if(uda.length > 0) {
+			//	pragma(msg, uda);
+			//	static if(is(uda[0] == JuliaToDType!F, F)) {
+			//	}
+			//}
+		}}
+		default: break;
+	}
+	return Nullable!(T).init;
+}*/
