@@ -2,19 +2,22 @@ module juliad.types;
 
 import juliad.julia;
 
+struct JuliaToDType(T) {
+}
+
 enum JuliaType {
 	Uniontype,
 	Unionall,
 	Typename,
-	Int8,
-	Int16,
-	Int32,
-	Int64,
-	Uint8,
-	Uint16,
-	Uint32,
-	Uint64,
-	Bool,
+	@JuliaToDType!byte Int8,
+	@JuliaToDType!short Int16,
+	@JuliaToDType!int Int32,
+	@JuliaToDType!long Int64,
+	@JuliaToDType!ubyte Uint8,
+	@JuliaToDType!ushort Uint16,
+	@JuliaToDType!uint Uint32,
+	@JuliaToDType!ulong Uint64,
+	@JuliaToDType!bool Bool,
 	Symbol,
 	Ssavalue,
 	Expr,
@@ -31,10 +34,10 @@ enum JuliaType {
 	Method,
 	Module,
 	Task,
-	String,
-	Float16,
-	Float32,
-	Float64
+	@JuliaToDType!String String,
+	@JuliaToDType!float Float16,
+	@JuliaToDType!float Float32,
+	@JuliaToDType!double Float64
 }
 
 string[] buildTypeStrings() pure @safe {
@@ -61,16 +64,6 @@ private string genJlIsType(string type) {
 	return format(s, type);
 }
 
-/*enum string[] typeStrings = [
-	"uniontype", "unionall", "typename", "int8",
-	"int16", "int32", "int64", "uint8", "uint16", "uint32",
-	"uint64", "bool", "symbol", "ssavalue", "expr", "globalref",
-	"gotonode", "pinode", "phinode", "phicnode", "upsilonnode",
-	"quotenode", "newvarnode", "method_instance",
-	"code_info", "method", "module", "task", "string",
-	"float16", "float32", "float64"
-];*/
-
 static foreach(t; typeStrings) {
 	mixin(genJlIsType(t));
 }
@@ -88,7 +81,7 @@ jl_taggedvalue_t* jl_astaggedvalue(jl_value_t* v) {
 //#define jl_valueof(v)                                           \
 //    ((jl_value_t*)((char*)(v) + sizeof(jl_taggedvalue_t)))
 
-jl_value_t *jl_valueof(jl_taggedvalue_t* tv) {
+jl_value_t* jl_valueof(jl_taggedvalue_t* tv) {
 	char* vc = cast(char*)tv;
 	char* mtv = vc + jl_taggedvalue_t.sizeof;
 	return cast(jl_value_t*)mtv;
@@ -106,10 +99,19 @@ jl_value_t* jl_typeof(jl_value_t* v) {
 }
 
 //#define jl_typeis(v,t) (jl_typeof(v)==(jl_value_t*)(t))
-bool jl_typeis(_jl_value_t* v, jl_datatype_t* dt) {
+bool jl_typeis(jl_value_t* v, jl_datatype_t* dt) {
 	return jl_typeof(v) is cast(jl_value_t*)dt;
 }
 
 bool jl_is_nothing(jl_value_t* v) {
 	return v == jl_nothing;
+}
+
+T get(T)(jl_value_t* v) {
+	static foreach(em; [EnumMembers!JuliaType]) {{
+		enum uda = __traits(getAttributes, em);	
+		static if(uda.length > 0 && is(uda == JuliaToDType!F, F)) {
+			alias DT = F;
+		}
+	}}
 }

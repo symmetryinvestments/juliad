@@ -13,5 +13,3 @@ _jl_value_t* jlEvalString(string stmt) {
 	}
 	return jl_eval_string(stmt.toStringz());
 }
-
-//slot(v)        (jl_typeis(v,jl_slotnumber_type) || jl_typeis(v,jl_typedslot_type))
