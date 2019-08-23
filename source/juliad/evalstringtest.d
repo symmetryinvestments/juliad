@@ -3,6 +3,7 @@ module juliad.evalstringtest;
 import std.format;
 
 import juliad;
+import juliad.types;
 
 unittest {
 	import std.stdio;
@@ -22,11 +23,6 @@ unittest {
 	import std.stdio;
 
 	jl_value_t* ret = jlEvalString("1 + 2");
-	static foreach(t; genJlTypes) {{
-		enum g = format(`bool i = jl_is_%s(ret);`, t);
-		mixin(g);
-		writeln(t, " ", i);
-	}}
 	if(jl_is_int32(ret)) {
     	double retUnboxed = jl_unbox_int32(ret);
 		writeln(retUnboxed);
