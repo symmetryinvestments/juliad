@@ -2,6 +2,7 @@ module juliad.types;
 
 import std.traits : EnumMembers;
 import std.array : array;
+import std.traits : isSomeString;
 import std.format : format;
 import std.string : toLower;
 import std.typecons : nullable, Nullable;
@@ -152,7 +153,7 @@ unittest {
 	static assert(d == JuliaType.String, format("%s", d));
 }
 
-Nullable!T get(T)(jl_value_t* v) {
+Nullable!T get(T)(jl_value_t* v) if(!isSomeString!T) {
 	Nullable!JuliaType jt = getType(v);
 	if(jt.isNull()) {
 		return Nullable!(T).init;
@@ -161,6 +162,20 @@ Nullable!T get(T)(jl_value_t* v) {
 	enum JuliaType djt = dTypeToJuliaType!(T);
 	return jt.get() == djt 
 		? getImpl!(T, djt)(v)
+		: Nullable!(T).init;
+}
+
+Nullable!T get(T)(jl_value_t* v) if(isSomeString!T) {
+	import std.string : fromStringz;
+
+	Nullable!JuliaType jt = getType(v);
+	if(jt.isNull()) {
+		return Nullable!(T).init;
+	}
+
+	enum JuliaType djt = dTypeToJuliaType!(T);
+	return jt.get() == djt 
+		? nullable(to!T(fromStringz(jl_string_ptr(v))))
 		: Nullable!(T).init;
 }
 
