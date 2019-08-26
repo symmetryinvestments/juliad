@@ -187,8 +187,13 @@ private Nullable!T getImpl(T, JuliaType jt)(jl_value_t* v) {
 		alias uda = __traits(getAttributes, emMem)[0];
 		pragma(msg, uda);
 		static if(is(uda : JuliaToDType!F, F)) {{
-			enum s = format("ret = nullable(jl_unbox_%s(v));", 
-					emStr.toLower());
+			static if(is(F == bool)) {
+				enum s = format("ret = nullable(to!bool(jl_unbox_%s(v)));", 
+						emStr.toLower());
+			} else {
+				enum s = format("ret = nullable(jl_unbox_%s(v));", 
+						emStr.toLower());
+			}
 			mixin(s);
 		}}
 	}}

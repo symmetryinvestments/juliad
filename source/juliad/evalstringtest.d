@@ -31,11 +31,17 @@ unittest {
 	assert(approxEqual(ret.get!double(), 3.0));
 }
 
-/*unittest {
+unittest {
 	jl_value_t* ret = jlEvalString("true");
 	assert(getType(ret) == JuliaType.Bool);
 	assert(ret.get!bool());
-}*/
+}
+
+unittest {
+	jl_value_t* ret = jlEvalString("false");
+	assert(getType(ret) == JuliaType.Bool);
+	assert(!ret.get!bool());
+}
 
 unittest {
 	jl_value_t* ret = jlEvalString("\"hello world\"");
