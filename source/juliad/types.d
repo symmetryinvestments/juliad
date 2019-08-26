@@ -21,10 +21,10 @@ enum JuliaType {
 	@JuliaToDType!short Int16,
 	@JuliaToDType!int Int32,
 	@JuliaToDType!long Int64,
-	@JuliaToDType!ubyte Uint8,
-	@JuliaToDType!ushort Uint16,
-	@JuliaToDType!uint Uint32,
-	@JuliaToDType!ulong Uint64,
+	@JuliaToDType!ubyte UInt8,
+	@JuliaToDType!ushort UInt16,
+	@JuliaToDType!uint UInt32,
+	@JuliaToDType!ulong UInt64,
 	@JuliaToDType!bool Bool,
 	Symbol,
 	Ssavalue,
@@ -185,7 +185,6 @@ private Nullable!T getImpl(T, JuliaType jt)(jl_value_t* v) {
 	alias emMem = __traits(getMember, JuliaType, emStr);
 	static if(__traits(getAttributes, emMem).length > 0) {{
 		alias uda = __traits(getAttributes, emMem)[0];
-		pragma(msg, uda);
 		static if(is(uda : JuliaToDType!F, F)) {{
 			static if(is(F == bool)) {
 				enum s = format("ret = nullable(to!bool(jl_unbox_%s(v)));", 
