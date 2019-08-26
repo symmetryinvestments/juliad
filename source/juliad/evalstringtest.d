@@ -13,10 +13,10 @@ unittest {
 	Nullable!JuliaType t = ret.getType();
 	assert(!t.isNull() && t.get() == JuliaType.Float64);
 
-	auto r = ret.get!double();
-	if(!r.isNull()) {
-		writeln(r.get());
-	}
+	//auto r = ret.get!double();
+	//if(!r.isNull()) {
+	//	writeln(r.get());
+	//}
 }
 
 unittest {

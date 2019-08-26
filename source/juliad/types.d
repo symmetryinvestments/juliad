@@ -123,7 +123,32 @@ bool jl_is_nothing(jl_value_t* v) {
 	return v == jl_nothing;
 }
 
-Nullable!T get(T)(jl_value_t* v) {
+JuliaType dTypeToJuliaType(T)() {
+	JuliaType ret;
+	static foreach(em; EnumMembers!JuliaType) {{
+		enum emStr = to!string(em);
+		alias emMem = __traits(getMember, JuliaType, emStr);
+		static if(__traits(getAttributes, emMem).length > 0) {{
+			alias uda = __traits(getAttributes, emMem)[0];
+			pragma(msg, uda);
+			static if(is(uda : JuliaToDType!F, F)) {
+				static if(is(T == F)) {
+					ret = em;
+					goto retLabel;
+				}
+			}
+		}}
+	}}
+	retLabel:
+	return ret;
+}
+
+unittest {
+	enum JuliaType d = dTypeToJuliaType!(double);
+	static assert(d == JuliaType.Float64, format("%s", d));
+}
+
+/*Nullable!T get(T)(jl_value_t* v) {
 	Nullable!JuliaType jt = getType(v);
 	if(jt.isNull()) {
 		return Nullable!(T).init;
@@ -131,7 +156,7 @@ Nullable!T get(T)(jl_value_t* v) {
 
 	enum JuliaType tt = __traits(getMember, EnumMembers,
 			T.stringof
-}
+}*/
 
 /*Nullable!T get(T)(jl_value_t* v) {
 	Nullable!JuliaType jt = getType(v);
