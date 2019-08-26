@@ -28,3 +28,8 @@ unittest {
 	jl_value_t* ret = jlEvalString("1 + 2.0");
 	assert(getType(ret) == JuliaType.Float64);
 }
+
+unittest {
+	jl_value_t* ret = jlEvalString("\"hello world\"");
+	assert(getType(ret) == JuliaType.String);
+}
