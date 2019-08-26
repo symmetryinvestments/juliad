@@ -130,7 +130,6 @@ JuliaType dTypeToJuliaType(T)() {
 		alias emMem = __traits(getMember, JuliaType, emStr);
 		static if(__traits(getAttributes, emMem).length > 0) {{
 			alias uda = __traits(getAttributes, emMem)[0];
-			pragma(msg, uda);
 			static if(is(uda : JuliaToDType!F, F)) {
 				static if(is(T == F)) {
 					ret = em;
@@ -148,46 +147,35 @@ unittest {
 	static assert(d == JuliaType.Float64, format("%s", d));
 }
 
-/*Nullable!T get(T)(jl_value_t* v) {
+unittest {
+	enum JuliaType d = dTypeToJuliaType!(string);
+	static assert(d == JuliaType.String, format("%s", d));
+}
+
+Nullable!T get(T)(jl_value_t* v) {
 	Nullable!JuliaType jt = getType(v);
 	if(jt.isNull()) {
 		return Nullable!(T).init;
 	}
 
-	enum JuliaType tt = __traits(getMember, EnumMembers,
-			T.stringof
-}*/
+	enum JuliaType djt = dTypeToJuliaType!(T);
+	return jt.get() == djt 
+		? getImpl!(T, djt)(v)
+		: Nullable!(T).init;
+}
 
-/*Nullable!T get(T)(jl_value_t* v) {
-	Nullable!JuliaType jt = getType(v);
-	if(jt.isNull()) {
-		return Nullable!(T).init;
-	}
-	switch(jt.get()) {
-		static foreach(em; EnumMembers!JuliaType) {{
-			enum emStr = to!string(em);
-			alias emMem = __traits(getMember, JuliaType, emStr);
-			static if(__traits(getAttributes, emMem).length > 0) {{
-				alias uda = __traits(getAttributes, emMem)[0];
-				pragma(msg, uda);
-				static if(is(uda : JuliaToDType!F, F)) {{
-					enum s = format("Nullable!%s ret = nullable(jl_unbox_%s(v));", 
-							F.stringof, emStr.toLower());
-					pragma(msg, s);
-					case em:
-						mixin(s);
-						return ret;
-				}}
-			}}
-			//enum uda = __traits(getAttributes, __traits(getMember, JuliaType,
-			//				em.stringof));
-			//static if(uda.length > 0) {
-			//	pragma(msg, uda);
-			//	static if(is(uda[0] == JuliaToDType!F, F)) {
-			//	}
-			//}
+private Nullable!T getImpl(T, JuliaType jt)(jl_value_t* v) {
+	Nullable!T ret;
+	enum emStr = to!string(jt);
+	alias emMem = __traits(getMember, JuliaType, emStr);
+	static if(__traits(getAttributes, emMem).length > 0) {{
+		alias uda = __traits(getAttributes, emMem)[0];
+		pragma(msg, uda);
+		static if(is(uda : JuliaToDType!F, F)) {{
+			enum s = format("ret = nullable(jl_unbox_%s(v));", 
+					emStr.toLower());
+			mixin(s);
 		}}
-		default: break;
-	}
-	return Nullable!(T).init;
-}*/
+	}}
+	return ret;	
+}
