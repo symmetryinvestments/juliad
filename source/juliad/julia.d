@@ -3256,7 +3256,7 @@ extern(C)
     int jl_is_imported(_jl_module_t*, _jl_sym_t*) @nogc nothrow;
     int jl_module_exports_p(_jl_module_t*, _jl_sym_t*) @nogc nothrow;
     void jl_add_standard_imports(_jl_module_t*) @nogc nothrow;
-    static _jl_value_t* jl_get_function(_jl_module_t*, const(char)*) @nogc nothrow;
+    //static _jl_value_t* jl_get_function(_jl_module_t*, const(char)*) @nogc nothrow;
     int jl_is_submodule(_jl_module_t*, _jl_module_t*) @nogc nothrow;
     jl_array_t* jl_eqtable_put(jl_array_t*, void*, void*, int*) @nogc nothrow;
     _jl_value_t* jl_eqtable_get(jl_array_t*, void*, _jl_value_t*) @nogc nothrow;

@@ -73,6 +73,11 @@ static foreach(t; typeStrings) {
 	mixin(genJlIsType(t));
 }
 
+jl_function_t* jl_get_function(jl_module_t* m, string name) {
+	import std.string : toStringz;
+	return cast(jl_function_t*)jl_get_global(m, jl_symbol(toStringz(name)));
+}
+
 Nullable!JuliaType getType(jl_value_t* v) {
 	enum ems = [EnumMembers!JuliaType];
 	static foreach(idx, t; typeStrings) {{
@@ -175,7 +180,7 @@ Nullable!T get(T)(jl_value_t* v) if(isSomeString!T) {
 
 	enum JuliaType djt = dTypeToJuliaType!(T);
 	return jt.get() == djt 
-		? nullable(to!T(fromStringz(jl_string_ptr(v))))
+		? nullable(to!T(fromStringz(jl_string_ptr(v))).idup)
 		: Nullable!(T).init;
 }
 
@@ -197,4 +202,13 @@ private Nullable!T getImpl(T, JuliaType jt)(jl_value_t* v) {
 		}}
 	}}
 	return ret;	
+}
+
+jl_value_t* toJulia(V)(V v) if(!isSomeString!V) {
+	jl_value_t* ret;
+	enum JuliaType djt = dTypeToJuliaType!(V);
+	enum s = format("ret = jl_box_%s(v);", 
+			to!string(djt).toLower());
+	mixin(s);
+	return ret;
 }
