@@ -212,3 +212,9 @@ jl_value_t* toJulia(V)(V v) if(!isSomeString!V) {
 	mixin(s);
 	return ret;
 }
+
+jl_value_t* toJulia(V)(V v) if(isSomeString!V) {
+	import std.string : toStringz;
+	jl_value_t* ret;
+	return jl_cstr_to_string(toStringz(to!string(v)));
+}

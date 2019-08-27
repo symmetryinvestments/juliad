@@ -1,7 +1,9 @@
 module juliad.typetests;
 
-import std.math : approxEqual;
+import std.conv : to;
 import std.format : format;
+import std.math : approxEqual;
+import std.meta : AliasSeq;
 
 import juliad;
 import juliad.types;
@@ -94,12 +96,54 @@ unittest {
 	assert(ret.get!string() == "hello world");
 }
 
+private jl_value_t* identiyTest(V)(V v) {
+	jl_function_t *func = jl_get_function(jl_base_module, "identity");
+	jl_value_t *argument = toJulia(v);
+	return jl_call1(func, argument);
+}
+
 unittest {
-	jl_function_t *func = jl_get_function(jl_base_module, "sqrt");
-	jl_value_t *argument = toJulia(2.0);
-	jl_value_t *ret = jl_call1(func, argument);
+	jl_value_t* ret = identiyTest(13.37);
 	assert(getType(ret) == JuliaType.Float64);
 	assert(!ret.get!double().isNull());
 	double rslt = ret.get!double();
-	assert(approxEqual(rslt, 1.41421), format("%s", rslt));
+	assert(approxEqual(rslt, 13.37), format("%s", rslt));
+}
+
+unittest {
+	jl_value_t* ret = identiyTest(true);
+	assert(getType(ret) == JuliaType.Bool);
+	assert(!ret.get!bool().isNull());
+	bool rslt = ret.get!bool();
+	assert(rslt);
+}
+
+unittest {
+	jl_value_t* ret = identiyTest(false);
+	assert(getType(ret) == JuliaType.Bool);
+	assert(!ret.get!bool().isNull());
+	bool rslt = ret.get!bool();
+	assert(!rslt);
+}
+
+unittest {
+	foreach(T; AliasSeq!(byte,short,int,long,ubyte,ushort,uint,ulong)) {
+		T val = cast(T)13;
+		jl_value_t* ret = identiyTest(val);
+		assert(!ret.get!T().isNull());
+		T rslt = ret.get!T();
+		assert(rslt == val, format("%s %s", rslt, val));
+	}
+}
+
+unittest {
+	foreach(T; AliasSeq!(string,wstring,dstring)) {
+		T exp = to!T("Hello World");
+		jl_value_t* ret = identiyTest(exp);
+		assert(getType(ret) == JuliaType.String, 
+				format("%s %s", getType(ret), JuliaType.String));
+		assert(!ret.get!string().isNull(), T.stringof);
+		T rslt = to!T(ret.get!string());
+		assert(rslt == exp);
+	}
 }
