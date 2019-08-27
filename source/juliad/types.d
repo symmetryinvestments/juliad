@@ -8,6 +8,7 @@ import std.string : toLower;
 import std.range : ElementEncodingType;
 import std.typecons : nullable, Nullable;
 import std.conv : to;
+import std.stdio;
 
 import juliad.julia;
 
@@ -160,7 +161,10 @@ unittest {
 	static assert(d == JuliaType.String, format("%s", d));
 }
 
-Nullable!T fromJuliaTo(T)(jl_value_t* v) if(!isSomeString!T) {
+Nullable!T fromJuliaTo(T)(jl_value_t* v) if(!isSomeString!T && isArray!T) {
+}
+
+Nullable!T fromJuliaTo(T)(jl_value_t* v) if(!isSomeString!T && !isArray!T) {
 	Nullable!JuliaType jt = getType(v);
 	if(jt.isNull()) {
 		return Nullable!(T).init;
@@ -263,8 +267,30 @@ jl_value_t* getArrayType(Arr)() {
 }
 
 jl_array_t* toJulia(V)(V v) if(!isSomeString!V && isArray!V) {
+	jl_array_t* makeArray(jl_value_t* type, size_t[] dims) {
+		jl_value_t*[] types = new jl_value_t*[](dims.length);
+		jl_tupletype_t* tt = jl_apply_tuple_type_v(types.ptr, types.length);
+		double* tuple = cast(double*)jl_new_struct_uninit(tt);
+		foreach(idx, val; dims) {
+			tuple[idx] = val;
+		}
+		return jl_new_array(type, cast(jl_value_t*)tuple);
+	}
+
+	size_t[] getDim(T)(T t) {
+		static assert(isArray!T, T.stringof);
+		size_t[] ret = [t.length];
+		static if(isArray!(typeof(t[0]))) {
+			ret ~= getDim!(t[0]);
+		}
+		return ret;
+	}
+
 	enum size_t dim = dimOfArray!(V);
-	static assert(dim, V.stringof ~ " is not and array");
-	jl_array_t* x = jl_ptr_to_array_1d(getArrayType!V(), v.ptr, v.length, 0);
+	size_t[] dims = getDim!(V)(v);
+	writeln(dim, " ", dims);
+	jl_value_t* ArrType = getArrayType!(V)();
+	
+	jl_array_t* x = makeArray(ArrType, dims);
 	return x;
 }
