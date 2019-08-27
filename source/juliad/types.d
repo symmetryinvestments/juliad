@@ -2,9 +2,10 @@ module juliad.types;
 
 import std.traits : EnumMembers;
 import std.array : array;
-import std.traits : isSomeString;
+import std.traits : isSomeString, isArray;
 import std.format : format;
 import std.string : toLower;
+import std.range : ElementEncodingType;
 import std.typecons : nullable, Nullable;
 import std.conv : to;
 
@@ -14,6 +15,7 @@ struct JuliaToDType(T) {
 }
 
 enum JuliaType {
+	@JuliaToDType!void Void,
 	Uniontype,
 	Unionall,
 	Typename,
@@ -158,7 +160,7 @@ unittest {
 	static assert(d == JuliaType.String, format("%s", d));
 }
 
-Nullable!T get(T)(jl_value_t* v) if(!isSomeString!T) {
+Nullable!T fromJuliaTo(T)(jl_value_t* v) if(!isSomeString!T) {
 	Nullable!JuliaType jt = getType(v);
 	if(jt.isNull()) {
 		return Nullable!(T).init;
@@ -166,11 +168,11 @@ Nullable!T get(T)(jl_value_t* v) if(!isSomeString!T) {
 
 	enum JuliaType djt = dTypeToJuliaType!(T);
 	return jt.get() == djt 
-		? getImpl!(T, djt)(v)
+		? fromJuliaImpl!(T, djt)(v)
 		: Nullable!(T).init;
 }
 
-Nullable!T get(T)(jl_value_t* v) if(isSomeString!T) {
+Nullable!T fromJuliaTo(T)(jl_value_t* v) if(isSomeString!T) {
 	import std.string : fromStringz;
 
 	Nullable!JuliaType jt = getType(v);
@@ -184,7 +186,7 @@ Nullable!T get(T)(jl_value_t* v) if(isSomeString!T) {
 		: Nullable!(T).init;
 }
 
-private Nullable!T getImpl(T, JuliaType jt)(jl_value_t* v) {
+private Nullable!T fromJuliaImpl(T, JuliaType jt)(jl_value_t* v) {
 	Nullable!T ret;
 	enum emStr = to!string(jt);
 	alias emMem = __traits(getMember, JuliaType, emStr);
@@ -204,7 +206,7 @@ private Nullable!T getImpl(T, JuliaType jt)(jl_value_t* v) {
 	return ret;	
 }
 
-jl_value_t* toJulia(V)(V v) if(!isSomeString!V) {
+jl_value_t* toJulia(V)(V v) if(!isSomeString!V && !isArray!V) {
 	jl_value_t* ret;
 	enum JuliaType djt = dTypeToJuliaType!(V);
 	enum s = format("ret = jl_box_%s(v);", 
@@ -217,4 +219,52 @@ jl_value_t* toJulia(V)(V v) if(isSomeString!V) {
 	import std.string : toStringz;
 	jl_value_t* ret;
 	return jl_cstr_to_string(toStringz(to!string(v)));
+}
+
+private template dimOfArray(Arr) {
+	static if(isArray!Arr) {
+		enum dimOfArray = 1 + dimOfArray!(ElementEncodingType!Arr);
+	} else {
+		enum dimOfArray = 0;
+	}
+}
+
+unittest {
+	static assert(dimOfArray!(int) == 0);
+	static assert(dimOfArray!(int[]) == 1);
+	static assert(dimOfArray!(int[][]) == 2);
+	static assert(dimOfArray!(int[][][][][]) == 5);
+}
+
+private template ArrayRootType(Arr) {
+	static if(isArray!Arr) {
+		alias ArrayRootType = ArrayRootType!(ElementEncodingType!Arr);
+	} else {
+		alias ArrayRootType = Arr;
+	}
+}
+
+unittest {
+	static assert(is(ArrayRootType!(int) == int));
+	static assert(is(ArrayRootType!(int[]) == int));
+	static assert(is(ArrayRootType!(int[][][][][]) == int));
+	static assert(is(ArrayRootType!(void*[][][][][]) == void*));
+}
+
+jl_value_t* getArrayType(Arr)() {
+	alias RootType = ArrayRootType!Arr;
+	enum JuliaType jt = dTypeToJuliaType!RootType;
+	enum string jtStr = to!string(jt).toLower();
+	enum string gen = `
+		jl_value_t* arrayType = jl_apply_array_type(cast(jl_value_t*)jl_%s_type, 1);
+	`;
+	mixin(format(gen, jtStr));
+	return arrayType;
+}
+
+jl_array_t* toJulia(V)(V v) if(!isSomeString!V && isArray!V) {
+	enum size_t dim = dimOfArray!(V);
+	static assert(dim, V.stringof ~ " is not and array");
+	jl_array_t* x = jl_ptr_to_array_1d(getArrayType!V(), v.ptr, v.length, 0);
+	return x;
 }

@@ -14,7 +14,7 @@ unittest {
 	Nullable!JuliaType t = ret.getType();
 	assert(!t.isNull() && t.get() == JuliaType.Float64);
 
-	auto r = ret.get!double();
+	auto r = ret.fromJuliaTo!double();
 	assert(!r.isNull());
 	assert(approxEqual(r.get(), 1.41421));
 }
