@@ -188,7 +188,7 @@ unittest {
 		[ [1,2]
 		, [3,4] ];
 	jl_array_t* dj = toJulia(ds);
-	//jl_gc_push1(cast(jl_value_t**)&dj);
+	jl_gc_push1(cast(jl_value_t**)&dj);
 
 	jl_gc_collect(1);
 	jl_gc_collect(0);
