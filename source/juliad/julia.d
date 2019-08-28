@@ -52,6 +52,7 @@ struct dpp {
 
 extern(C)
 {
+
     static int _xtest() @nogc nothrow;
     static void _xsaves64(void*, ulong) @nogc nothrow;
     static void _xrstors64(void*, ulong) @nogc nothrow;

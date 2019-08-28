@@ -4,3 +4,6 @@ authors "Robert Schadek" "Laeeth Isharc"
 copyright "Copyright © 2019, Symmetry Investments"
 license "LGPL3"
 libs "julia"
+libs "juliadshim"
+
+lflags "-Lshim" platform="linux"

@@ -4,9 +4,12 @@ import std.conv : to;
 import std.format : format;
 import std.math : approxEqual;
 import std.meta : AliasSeq;
+import std.stdio;
 
 import juliad;
+import juliad.shims;
 import juliad.types;
+import juliad.eval;
 
 unittest {
 	jl_value_t* ret = jlEvalString("1 + 2");
@@ -149,6 +152,7 @@ unittest {
 }
 
 unittest {
+	jl_gc_enable(0);
 	auto ds = [1.0, 2.0, 3.0];
 	auto dj = toJulia(ds);
 	jl_function_t *func = jl_get_function(jl_base_module, "sum");
@@ -168,6 +172,49 @@ unittest {
 
 	assert(getType(ret) == JuliaType.Int64);
 	assert(!ret.fromJuliaTo!long().isNull());
-	double rslt = ret.fromJuliaTo!long();
+	long rslt = ret.fromJuliaTo!long();
 	assert(rslt == 6);
+}
+
+unittest {
+	auto ds = 
+		[ [1,2]
+		, [3,4] ];
+	auto dj = toJulia(ds);
+	jl_gc_push1(cast(jl_value_t**)&dj);
+	auto ret = jlEvalString("sum(sum([[1,2], [3,4]]))");
+	writeln(ret);
+	jl_gc_push1(&ret);
+	assert(getType(ret) == JuliaType.Int64);
+	assert(!ret.fromJuliaTo!long().isNull());
+	long rslt = ret.fromJuliaTo!long();
+	assert(rslt == 10, format("%s == 10", rslt));
+	jl_gc_pop();
+	jl_gc_pop();
+}
+
+unittest {
+	auto ds = 
+		[ [1,2]
+		, [3,4] ];
+	auto dj = toJulia(ds);
+	jl_gc_push1(cast(jl_value_t**)&dj);
+	auto foo = jlEvalString(
+	`function fooRober(a)
+		return sum(sum(a))
+	end`);
+	assert(!jl_exception_occurred(), getErrorString());
+	assert(foo !is null);
+	jl_gc_push1(&foo);
+	jl_function_t* func = cast(jl_function_t*)jlEvalString("fooRober");
+	assert(func !is null);
+	assert(!jl_exception_occurred(), getErrorString());
+	jl_value_t* ret = jl_call1(func, cast(jl_value_t*)dj);
+	assert(!jl_exception_occurred(), getErrorString());
+	assert(ret !is null);
+	jl_gc_push1(&ret);
+	assert(getType(ret) == JuliaType.Int64);
+	assert(!ret.fromJuliaTo!long().isNull());
+	long rslt = ret.fromJuliaTo!long();
+	assert(rslt == 10, format("%s == 10", rslt));
 }

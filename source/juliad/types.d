@@ -11,6 +11,7 @@ import std.conv : to;
 import std.stdio;
 
 import juliad.julia;
+import juliad.shims;
 
 struct JuliaToDType(T) {
 }
@@ -82,6 +83,7 @@ jl_function_t* jl_get_function(jl_module_t* m, string name) {
 }
 
 Nullable!JuliaType getType(jl_value_t* v) {
+	assert(v !is null, "Passed value must not be null");
 	enum ems = [EnumMembers!JuliaType];
 	static foreach(idx, t; typeStrings) {{
 		enum s = format(`bool i = jl_is_%s(v);`, t);
@@ -257,40 +259,44 @@ unittest {
 
 jl_value_t* getArrayType(Arr)() {
 	alias RootType = ArrayRootType!Arr;
+	enum size_t dim = dimOfArray!Arr;
 	enum JuliaType jt = dTypeToJuliaType!RootType;
 	enum string jtStr = to!string(jt).toLower();
 	enum string gen = `
-		jl_value_t* arrayType = jl_apply_array_type(cast(jl_value_t*)jl_%s_type, 1);
+		jl_value_t* arrayType = jl_apply_array_type(cast(jl_value_t*)jl_%s_type, %s);
 	`;
-	mixin(format(gen, jtStr));
+	mixin(format(gen, jtStr, dim));
 	return arrayType;
 }
 
 jl_array_t* toJulia(V)(V v) if(!isSomeString!V && isArray!V) {
-	jl_array_t* makeArray(jl_value_t* type, size_t[] dims) {
-		jl_value_t*[] types = new jl_value_t*[](dims.length);
-		jl_tupletype_t* tt = jl_apply_tuple_type_v(types.ptr, types.length);
-		double* tuple = cast(double*)jl_new_struct_uninit(tt);
-		foreach(idx, val; dims) {
-			tuple[idx] = val;
-		}
-		return jl_new_array(type, cast(jl_value_t*)tuple);
-	}
+	enum dim = dimOfArray!(V);
+	alias RootType = ArrayRootType!V;
 
-	size_t[] getDim(T)(T t) {
-		static assert(isArray!T, T.stringof);
-		size_t[] ret = [t.length];
-		static if(isArray!(typeof(t[0]))) {
-			ret ~= getDim!(t[0]);
-		}
-		return ret;
-	}
+	jl_value_t* arrayType = getArrayType!V;
+	jl_array_t* ret;
 
-	enum size_t dim = dimOfArray!(V);
-	size_t[] dims = getDim!(V)(v);
-	writeln(dim, " ", dims);
-	jl_value_t* ArrType = getArrayType!(V)();
-	
-	jl_array_t* x = makeArray(ArrType, dims);
-	return x;
+	static if(dim == 1) {
+		ret = jl_alloc_array_1d(arrayType, v.length);
+		RootType* data = cast(RootType*)jl_array_data(ret);
+		foreach(idx, val; v) {
+			data[idx] = val;
+		}
+	} else static if(dim == 2) {
+		ret = jl_alloc_array_2d(arrayType, v.length, v[0].length);
+		RootType* data = cast(RootType*)jl_array_data(ret);
+		const size_t dim0 = jl_array_dim(ret, 0);
+		foreach(idx, it; v) {
+			foreach(jdx, jt; it) {
+				data[jdx + dim0 * idx] = jt;
+			}
+		}
+	} else static if(dim == 3) {
+		ret = jl_alloc_array_3d(arrayType, v.length, v[0].length,
+				v[0][0].length);
+	} else {
+		static assert(false, V.stringof ~ 
+				"can not be converted to julia array, PRs welcome");
+	}
+	return ret;
 }
