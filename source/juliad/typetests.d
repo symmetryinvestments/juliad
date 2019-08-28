@@ -152,7 +152,6 @@ unittest {
 }
 
 unittest {
-	jl_gc_enable(0);
 	auto ds = [1.0, 2.0, 3.0];
 	auto dj = toJulia(ds);
 	jl_function_t *func = jl_get_function(jl_base_module, "sum");
@@ -177,42 +176,39 @@ unittest {
 }
 
 unittest {
-	auto ds = 
-		[ [1,2]
-		, [3,4] ];
-	auto dj = toJulia(ds);
-	jl_gc_push1(cast(jl_value_t**)&dj);
 	auto ret = jlEvalString("sum(sum([[1,2], [3,4]]))");
-	writeln(ret);
-	jl_gc_push1(&ret);
 	assert(getType(ret) == JuliaType.Int64);
 	assert(!ret.fromJuliaTo!long().isNull());
 	long rslt = ret.fromJuliaTo!long();
 	assert(rslt == 10, format("%s == 10", rslt));
-	jl_gc_pop();
-	jl_gc_pop();
 }
 
 unittest {
 	auto ds = 
 		[ [1,2]
 		, [3,4] ];
-	auto dj = toJulia(ds);
-	jl_gc_push1(cast(jl_value_t**)&dj);
-	auto foo = jlEvalString(
-	`function fooRober(a)
+	jl_array_t* dj = toJulia(ds);
+	//jl_gc_push1(cast(jl_value_t**)&dj);
+
+	jl_gc_collect(1);
+	jl_gc_collect(0);
+	jl_gc_collect(1);
+
+	jl_value_t* foo = jlEvalString(
+	`function foo(a)
 		return sum(sum(a))
 	end`);
+	//jl_gc_push1(cast(jl_value_t**)&foo);
+
 	assert(!jl_exception_occurred(), getErrorString());
 	assert(foo !is null);
-	jl_gc_push1(&foo);
-	jl_function_t* func = cast(jl_function_t*)jlEvalString("fooRober");
+	jl_function_t* func = cast(jl_function_t*)jlEvalString("foo");
+	//jl_gc_push1(cast(jl_value_t**)&func);
 	assert(func !is null);
 	assert(!jl_exception_occurred(), getErrorString());
 	jl_value_t* ret = jl_call1(func, cast(jl_value_t*)dj);
 	assert(!jl_exception_occurred(), getErrorString());
 	assert(ret !is null);
-	jl_gc_push1(&ret);
 	assert(getType(ret) == JuliaType.Int64);
 	assert(!ret.fromJuliaTo!long().isNull());
 	long rslt = ret.fromJuliaTo!long();

@@ -45,7 +45,7 @@ size_t jl_array_dim(jl_array_t* a, size_t dim) {
 //	jl_get_ptls_states().pgcstack = cast(jl_gcframe_t*)__gc_stkf;
 //}
 
-extern(C) {
+/*extern(C) {
 void jl_gc_push1(jl_value_t** arg);
 void jl_gc_push2(jl_value_t** arg, jl_value_t** arg1);
 void jl_gc_push3(jl_value_t** arg, jl_value_t** arg1, jl_value_t** arg2);
@@ -56,6 +56,16 @@ void jl_gc_push5(jl_value_t** arg, jl_value_t** arg1, jl_value_t** arg2,
 void jl_gc_push6(jl_value_t** arg, jl_value_t** arg1, jl_value_t** arg2, 
 		jl_value_t** arg3, jl_value_t** arg4, jl_value_t** arg5);
 void jl_gc_pop();
+}*/
+void jl_gc_push1(jl_value_t** arg) {
+	void*[] __gc_stkf = 
+	    [ cast(void*)3, cast(void*)jl_get_ptls_states().pgcstack
+	    , cast(void*)arg ];
+	jl_get_ptls_states().pgcstack = cast(jl_gcframe_t*)__gc_stkf;
+}
+
+void jl_gc_pop() {
+	jl_get_ptls_states().pgcstack = jl_get_ptls_states().pgcstack.prev;
 }
 
 string getErrorString() {
