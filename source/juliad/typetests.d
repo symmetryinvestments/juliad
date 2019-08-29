@@ -214,3 +214,33 @@ unittest {
 	long rslt = ret.fromJuliaTo!long();
 	assert(rslt == 10, format("%s == 10", rslt));
 }
+
+unittest {
+	auto ds = 
+		[ [ [1,2], [3,4] ]
+		, [ [5,6], [7,8] ]
+		];
+	writeln(ds);
+	jl_array_t* dj = toJulia(ds);
+	jl_gc_push1(cast(jl_value_t**)&dj);
+
+	jl_value_t* bar = jlEvalString(
+	`function bar(a)
+		return sum(sum(sum(a)))
+	end`);
+	jl_gc_push1(cast(jl_value_t**)&bar);
+
+	assert(!jl_exception_occurred(), getErrorString());
+	assert(bar !is null);
+	jl_function_t* func = cast(jl_function_t*)jlEvalString("bar");
+	jl_gc_push1(cast(jl_value_t**)&func);
+	assert(func !is null);
+	assert(!jl_exception_occurred(), getErrorString());
+	jl_value_t* ret = jl_call1(func, cast(jl_value_t*)dj);
+	assert(!jl_exception_occurred(), getErrorString());
+	assert(ret !is null);
+	assert(getType(ret) == JuliaType.Int64);
+	assert(!ret.fromJuliaTo!long().isNull());
+	long rslt = ret.fromJuliaTo!long();
+	assert(rslt == 36, format("%s == 36", rslt));
+}

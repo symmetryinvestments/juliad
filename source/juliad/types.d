@@ -294,6 +294,17 @@ jl_array_t* toJulia(V)(V v) if(!isSomeString!V && isArray!V) {
 	} else static if(dim == 3) {
 		ret = jl_alloc_array_3d(arrayType, v.length, v[0].length,
 				v[0][0].length);
+		RootType* data = cast(RootType*)jl_array_data(ret);
+		const size_t dim0 = jl_array_dim(ret, 0);
+		const size_t dim1 = jl_array_dim(ret, 1);
+		foreach(idx, it; v) {
+			foreach(jdx, jt; it) {
+				foreach(kdx, kt; jt) {
+					data[(kdx * dim0 * dim1) + (jdx * dim0) + idx] = kt;
+				}
+			}
+		}
+		writeln(data[0 .. jl_array_len(ret)]);
 	} else {
 		static assert(false, V.stringof ~ 
 				"can not be converted to julia array, PRs welcome");
