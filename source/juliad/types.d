@@ -164,6 +164,53 @@ unittest {
 }
 
 Nullable!T fromJuliaTo(T)(jl_value_t* v) if(!isSomeString!T && isArray!T) {
+	enum size_t dim = dimOfArray!T;
+
+	//if(!jl_is_array_type(v)) {
+	//	writeln(__LINE__);
+	//	return Nullable!(T).init;
+	//}
+
+	jl_array_t* arr = cast(jl_array_t*)v;
+
+	const size_t arrDim = to!size_t(jl_array_ndims(v));
+
+//	if(arrDim == dim) {
+//		writeln(__LINE__);
+//		return Nullable!(T).init;
+//	}
+
+	jl_value_t* elType = jl_tparam0(jl_typeof(cast(jl_value_t*)arr));
+	Nullable!JuliaType elJType = getType(elType);
+
+//	if(elJType.isNull()) {
+//		writeln(__LINE__);
+//		return Nullable!(T).init;
+//	}
+
+	alias RootType = ArrayRootType!T;
+	enum JuliaType tType = dTypeToJuliaType!(RootType);
+
+//	if(elJType.get() != tType) {
+//		writeln(__LINE__);
+//		return Nullable!(T).init;
+//	}
+
+	static if(dim == 1) {
+		void* data = jl_array_data(arr);
+		RootType* tData = cast(RootType*)data;
+		const size_t len1 = jl_array_dim(arr, 1);
+		RootType[] tSlice = tData[0 .. len1];
+
+		T ret = new T(len1);
+		foreach(idx, val; tSlice) {
+			ret[idx] = val;
+		}
+		writeln(ret);
+		return nullable(ret);
+	} else {
+		static assert(false, T.stringof);
+	}
 }
 
 Nullable!T fromJuliaTo(T)(jl_value_t* v) if(!isSomeString!T && !isArray!T) {

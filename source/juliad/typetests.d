@@ -4,6 +4,7 @@ import std.conv : to;
 import std.format : format;
 import std.math : approxEqual;
 import std.meta : AliasSeq;
+import std.typecons : Nullable;
 import std.stdio;
 
 import juliad;
@@ -243,4 +244,15 @@ unittest {
 	assert(!ret.fromJuliaTo!long().isNull());
 	long rslt = ret.fromJuliaTo!long();
 	assert(rslt == 36, format("%s == 36", rslt));
+}
+
+unittest {
+	int[] ds = [1, 2, 3];
+	auto dj = toJulia(ds);
+	jl_function_t *func = jl_get_function(jl_base_module, "identity");
+	jl_value_t* ret = jl_call1(func, cast(jl_value_t*)dj);
+
+	Nullable!(int[]) r = fromJuliaTo!(int[])(ret);
+	assert(r.isNull());
+	assert(r.get() == ds, format("%s", r.get()));
 }

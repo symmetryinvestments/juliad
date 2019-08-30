@@ -33,6 +33,71 @@ size_t jl_array_dim(jl_array_t* a, size_t dim) {
 	return r[dim];
 }
 
+// #define jl_array_ndims(a) ((int32_t)(((jl_array_t*)a)->flags.ndims))
+uint jl_array_ndims(jl_value_t* a) {
+	return jl_array_ndims(cast(jl_array_t*)a);
+}
+
+uint jl_array_ndims(jl_array_t* a) {
+	auto t = (*a).flags.ndims;
+	return cast(uint)t;
+}
+
+
+// #define jl_typeof(v)                                                    \
+//     ((jl_value_t*)(jl_astaggedvalue(v)->header & ~(uintptr_t)15))
+jl_value_t* jl_typeof(jl_value_t* t) {
+	return cast(jl_value_t*)(jl_astaggedvalue(t).header & ~cast(uint)15);
+}
+
+//#define jl_astaggedvalue(v)                                             \
+//    ((jl_taggedvalue_t*)((char*)(v) - sizeof(jl_taggedvalue_t)))
+
+jl_taggedvalue_t* jl_astaggedvalue(jl_value_t *v) {
+	return cast(jl_taggedvalue_t*)((cast(char*)v) - jl_taggedvalue_t.sizeof);
+}
+
+// #define jl_tparam0(t)  jl_svecref(((jl_datatype_t*)(t))->parameters, 0)
+jl_value_t* jl_tparam0(jl_array_t* t) {
+	return jl_tparam0(cast(jl_value_t*)t);
+}
+
+jl_value_t* jl_tparam0(jl_value_t* t) {
+	return jl_svecref((cast(jl_datatype_t*)t).parameters, 0);
+}
+
+bool jl_is_array_type(jl_value_t* t) {
+    return jl_is_datatype(t) &&
+            (cast(jl_datatype_t*)t).name == jl_array_typename;
+}
+
+//#define jl_svec_len(t)              (((jl_svec_t*)(t))->length)
+size_t jl_svec_len(jl_svec_t* t) {
+	return t.length;
+}
+
+//#define jl_svec_data(t) ((jl_value_t**)((char*)(t) + sizeof(jl_svec_t)))
+jl_value_t** jl_svec_data(jl_svec_t* t) {
+	return cast(jl_value_t**)((cast(char*)t) + jl_svec_t.sizeof);
+}
+
+jl_value_t *jl_svecref(jl_svec_t* t, size_t i) {
+    //assert(jl_typeis(cast(jl_value_t*)t, jl_simplevector_type));
+    //assert(i < jl_svec_len(t));
+    return jl_svec_data(t)[i];
+}
+
+// #define jl_is_datatype(v)    jl_typeis(v,jl_datatype_type)
+bool jl_is_datatype(jl_value_t* t) {
+	return jl_typeis(t, jl_datatype_type);
+}
+
+
+// #define jl_typeis(v,t) (jl_typeof(v)==(jl_value_t*)(t))
+bool jl_typeis(jl_value_t* v, jl_datatype_t* t) {
+	return jl_typeof(v) == cast(jl_value_t*)t;
+}
+
 // #define jl_pgcstack (jl_get_ptls_states()->pgcstack)
 //_jl_gcframe_t* jl_pgcstack() {
 //	return jl_get_ptls_states().pgcstack;

@@ -3076,8 +3076,8 @@ extern(C)
     static int jl_isbits(void*) @nogc nothrow;
     static int jl_is_datatype_singleton(_jl_datatype_t*) @nogc nothrow;
     static int jl_is_abstracttype(void*) @nogc nothrow;
-    static int jl_is_array_type(void*) @nogc nothrow;
-    static int jl_is_array(void*) @nogc nothrow;
+    //static int jl_is_array_type(void*) @nogc nothrow;
+    //static int jl_is_array(void*) @nogc nothrow;
     static int jl_is_cpointer_type(_jl_value_t*) @nogc nothrow;
     static int jl_is_abstract_ref_type(_jl_value_t*) @nogc nothrow;
     static int jl_is_tuple_type(void*) @nogc nothrow;
