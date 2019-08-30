@@ -1,23 +1,17 @@
+# Binding Julia to the D Programming Language
 
-Instructions
-============
+## Features
 
-install dpp (allows you to include C headers in a D program):
-	dub fetch dpp
-	dub build dpp
-	[link d++ executable in the dpp/bin directory so it will be found on your path]
+Very basic interaction works.
 
-./build.sh
-./juliahw
-
-The above works on Arch Linux and might require changes on other linux variants.
-Untested on Windows.
-
-This repository simply shows you how to call the C API from D without manually translating
-julia.h
-
-Later I hope it will be possible to create a high level wrapper to write D functions
-callable from Julia and to call Julia from D in an idiomatic style with code generation
-taking care of the type conversion
-
-
+- [*] Basic type conversion
+- [*] 1D Arrays to Julia
+- [ ] ND Arrays to Julia
+- [ ] 1D Arrays from Julia
+- [ ] ND Arrays from Julia
+- [ ] D struct to Julia
+- [ ] D struct from Julia
+- [*] jlEvalString
+- [*] jl_gc_push1 Remember to to push and pop your values otherwise your
+  programm will segfault thanks to the Julia GC
+- [*] jl_gc_pop 
